@@ -1,12 +1,12 @@
 **Why json-edit**
- - Fast and easy to use
- - It just depends on jQuery
- - It can be use in tow mode : property grid / normal form(road map)
- - Easy to customize css
- - RTL support
- - Supported inputs : text/checkbox/textarea/html/color/date/number/radio/select
- - Validation
- - Inline help text
+ - Fast and easy to use.
+ - RTL support : just add style (direction:rtl) to the place holder element.
+ - It just depends on jQuery.
+ - It can be use in tow mode : property grid(currently supported) / normal form(road map).
+ - Easy to customize css.
+ - Supported inputs : text/checkbox/textarea/html/color/date/number/radio/select.
+ - Validation support.
+ - Additional text option for describing inputs.
 
 **How to use**
 - A demo.html is included that describe the usage.
