@@ -2,11 +2,12 @@
  - Fast and easy to use.
  - RTL support : just add style (direction:rtl) to the place holder element.
  - It just depends on jQuery.
- - It can be use in tow mode : property grid(currently supported) / normal form(road map).
+ - It can be use in tow mode : property grid(currently implemented) / normal form(road map).
  - Easy to customize css.
  - Supported inputs : text/checkbox/textarea/html/color/date/number/radio/select.
  - Validation support.
  - Additional text option for describing inputs.
+ - Based on schema standard.
 
 **How to use**
 - A demo.html is included that describe the usage.
