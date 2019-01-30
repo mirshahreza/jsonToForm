@@ -1,0 +1,151 @@
+.j-container {
+    width: 100%;
+    border-collapse: collapse;
+    border-width: 0px;
+}
+
+.j-container td {
+    padding: 0px;
+}
+
+.j-container tr {
+    outline: 1px solid gainsboro;
+}
+
+.j-title-col {
+    width: 200px;
+}
+
+.j-sep-col {
+    width: 3px;
+    background-color: gainsboro !important;
+}
+
+.j-input-text,.j-input-select,.j-input-textarea,.j-input-date,.j-input-number,.j-input-html {
+    width: 100%;
+    border-width: 0px;
+    padding: 8px;
+}
+
+.j-input-radio-label,.j-input-radio {
+    margin-top: 6px;
+}
+
+.j-input-text::placeholder{
+    color: silver;
+}
+
+
+.j-input-html-div{
+    padding: 8px;
+    margin-top: 3px;   
+    margin-bottom: 3px;
+    margin-left: 2px;
+    margin-right: 2px;   
+}
+
+.j-input-html{
+    width: 0px;
+    height: 0px;
+    padding: 0px;
+    border-width: 0px;
+}
+
+.j-input-textarea{
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.j-input-text:focus,.j-input-select:focus,.j-input-textarea:focus,.j-input-date:focus,.j-input-number:focus,.j-input-html-div:focus {
+    outline: 1px solid gainsboro;
+}
+
+.j-input-select {}
+
+
+.j-oject-title-row,.j-array-title-row,
+.j-oject-title-row td,.j-array-title-row td {
+    font-weight: bold;
+    font-size: 14px;
+    background-color: gainsboro;
+}
+
+.j-oject-title-row .j-title-col,.j-array-title-row .j-title-col {
+    padding: 3px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+
+.j-oject-value-row td {
+    font-size: 14px;
+}
+
+.j-oject-value-row .j-title-col {
+    padding: 8px !important;
+    font-size: 16px;
+}
+
+
+
+.j-add-array-item{
+    cursor: pointer;
+    margin-left: 4px;
+    margin-right: 4px;
+    font-weight: bolder;
+    font-size: 16px;
+}
+
+.j-remove-array-item{
+    font-family: 'Arial';
+    color: red;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: bold;
+
+}
+
+.j-ec {
+    width: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.j-collapsed{
+    display: none;
+}
+
+.j-body-col {}
+
+.j-inline-help {
+    margin-top: 7px !important;
+    margin-bottom: 5px !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    color: gray;
+}
+
+.j-validation-help {
+    margin-top: 7px !important;
+    margin-bottom: 5px !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    color: orange;
+}
+
+.j-input[data-is-valid="false"] {
+    outline: 1px solid red !important;
+    outline-offset: -2px;
+}
+
+.j-input[data-is-valid="true"].j-validation-help {
+    display: none;
+}
+
+.j-required-star {
+    color: red;
+    font-weight: bold;
+    vertical-align: middle;
+}
