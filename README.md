@@ -1,14 +1,17 @@
 **Why json-edit**
+ - Fast and easy to use
  - It just depends on jQuery
  - It can be use in tow mode : property grid / normal form(road map)
- - Fast and easy to use
- - Customizable css
+ - Easy to customize css
+ - RTL support
+ - Supported inputs : text/checkbox/textarea/html/color/date/number/radio/select
+ - Validation
+ - Inline help text
 
 **How to use**
 - A demo.html is included that describe the usage.
 
 **Options**
------------------------------------------
 - schema / default : {} / a json schema  
 - value / default : {} / a json object  
 - expandingLevel / default : -1 / tree levels that initially is expanded. by default all levels will be expanded 
@@ -20,16 +23,27 @@
 - selectNullCaption / default : 'null' / caption for radio elements when is null 
 
 **events**
------------------------------------------
 - afterValueChanged  
 - afterWidgetCreated
 
 **methods**
------------------------------------------
 - isValid()  
 - getSchema()
 - getValue()
 - setValue(value)
+
+**Next step V1.1.1**
+- Defaults for schema / reset to default button
+- Validation by regular based on schema standards
+- Validation for array items based on schema standards
+
+**road map**
+- Checkbox list (when node is simple array)
+- Including some important schemas like schema(for design another schema) / css 
+- Including some important regulars like email/website/...
+- Layout option for switching between property grid mode and normal form
+- Auto complete source for inputs by connecting to other API
+- Additional item for object nodes
 
 
 **Similar projects**
