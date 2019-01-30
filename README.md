@@ -5,7 +5,7 @@
  - Customizable css
 
 **How to use**
-A demo.html is included that describe the usage.
+- A demo.html is included that describe the usage.
 
 **Options**
 -----------------------------------------
@@ -18,6 +18,18 @@ A demo.html is included that describe the usage.
 - treeExpandCollapseButton / default : true / show buttons to expand/collapse tree nodes 
 - selectNullCaption / default : '' / caption for select elements when is null
 - selectNullCaption / default : 'null' / caption for radio elements when is null 
+
+**events**
+-----------------------------------------
+- afterValueChanged  
+- afterWidgetCreated
+
+**methods**
+-----------------------------------------
+- isValid()  
+- getSchema()
+- getValue()
+- setValue(value)
 
 
 **Similar projects**
