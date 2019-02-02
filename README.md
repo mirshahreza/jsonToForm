@@ -53,4 +53,5 @@
  - https://github.com/jdorn/json-editor
  - https://github.com/plantain-00/schema-based-json-editor
  - https://github.com/codecombat/treema
+ - https://json-schema-editor.tangramjs.com/
  
