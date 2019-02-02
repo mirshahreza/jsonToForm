@@ -23,11 +23,11 @@
 - selectNullCaption / default : '' / caption for select elements when is null
 - selectNullCaption / default : 'null' / caption for radio elements when is null 
 
-**events**
+**Events**
 - afterValueChanged  
 - afterWidgetCreated
 
-**methods**
+**Methods**
 - isValid()  
 - getSchema()
 - getValue()
@@ -38,7 +38,7 @@
 - Validation by regular based on schema standards
 - Validation for array items based on schema standards
 
-**road map**
+**Road map**
 - Checkbox list (when node is simple array)
 - Including some important schemas like schema(for design another schema) / css 
 - Including some important regulars like email/website/...
