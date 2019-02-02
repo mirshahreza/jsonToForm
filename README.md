@@ -16,7 +16,7 @@
 - schema / default : {} / a json schema  
 - value / default : {} / a json object  
 - expandingLevel / default : -1 / tree levels that initially is expanded. by default all levels will be expanded 
-- renderFirstLevel / default : false | indicates root element renders as a visual container or no
+- renderFirstLevel / default : false / indicates root element renders as a visual container or no
 - autoTrimValues / default : true / trims spaces automatically
 - indenting / default : 5 / number of spaces for each level of tree
 - treeExpandCollapseButton / default : true / show buttons to expand/collapse tree nodes 
@@ -51,3 +51,5 @@
  - https://github.com/jsonform/jsonform 
  - https://jsonforms.io/
  - https://github.com/jdorn/json-editor
+ - https://github.com/plantain-00/schema-based-json-editor
+ 
