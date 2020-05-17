@@ -79,7 +79,14 @@
                     }
                 }
             }
-
+            if(elm.hasClass("j-input-email")){
+                var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/; // Regex validation for international number
+                elm.attr("data-is-valid", (regex.test(elm.val())));
+            }
+            if(elm.hasClass("j-input-tel")){
+                var regex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/; // Regex validation for email
+                elm.attr("data-is-valid", (regex.test(elm.val())));
+            }
             if (elm.hasClass("j-input-checkbox")) {
                 elm.attr("data-is-valid", (v_required == "true" && elm.prop("checked") == false ? "false" : "true"));
             }
@@ -99,7 +106,7 @@
             renderPlace.find(".j-ec").off("click").on("click", function () { toggleSubTree(this); });
             renderPlace.find(".j-add-array-item").off("click").on("click", function () { addArrayItem($(this), true, null); });
             renderPlace.find(".j-remove-array-item").off("click").on("click", function () { removeArrayItem($(this)); });
-            renderPlace.find(".j-input-text,.j-input-textarea,.j-input-date,.j-input-number").off("keyup").on("keyup", function () { valueChanged($(this)) });
+            renderPlace.find(".j-input-text,.j-input-textarea,.j-input-date,.j-input-number,.j-input-email,.j-input-tel").off("keyup").on("keyup", function () { valueChanged($(this)) });
             renderPlace.find(".j-input-checkbox,.j-input-radio,.j-input-select,.j-input-color,.j-input-date,.j-input-number,.j-input-html").off("change").on("change", function () { valueChanged($(this)) });
             renderPlace.find(".j-input-html-div").off("keyup").on("keyup", function () { changeInput($(this)) });
             renderPlace.find(".j-input-html").off("focus").on("focus", function () { $(this).parents("td:first").find(".j-input-html-div:first").focus(); });
@@ -161,7 +168,7 @@
 
         function renderSchemaNode(schemaNode, schemaName, requiredItems) {
             var nodeType = fixNU(schemaNode["type"], "string");
-            if (nodeType == "string" || nodeType == "number" || nodeType == "integer" || nodeType == "boolean")
+            if (nodeType == "string" || nodeType == "number" || nodeType == "integer" || nodeType == "boolean" || nodeType == "email" || nodeType == "tel")
                 return renderSimpleNode(schemaNode, schemaName, (requiredItems ? requiredItems.includes(schemaName) : false));
             if (nodeType == "array") return renderArrayNode(schemaNode, schemaName);
             if (nodeType == "object") return renderObjectNode(schemaNode, schemaName);
@@ -197,6 +204,8 @@
             } else {
                 if (fixNU(schemaNode["enum"], "") == "") {
                     var editor = getUISetting(schemaNode, "editor", "text"), htmlEditor = "", minAtt = "", maxAtt = "";
+                    if (nodeType == "email") editor = "email";
+                    if (nodeType == "tel") editor = "tel";
                     if (nodeType == "number" || nodeType == "integer") editor = "number";
                     if (editor == "html") htmlEditor = '<div class="j-input j-input-html-div" ' + requiredAtt + ' contenteditable></div>';
                     minAtt = fixNU(schemaNode["minLength"], "") + fixNU(schemaNode["minimum"], "");
@@ -282,7 +291,7 @@
             var arrSchema = { "title": "", "type": arrType };
 
             level++;
-            if (arrType == "string" || "number" || "boolean") {
+            if (arrType == "string" || arrType == "number" || arrType == "boolean" || arrType == "email" || arrType == "tel") {
                 if (schemaNode["items"] && schemaNode["items"]["ui"]) arrSchema["ui"] = schemaNode["items"]["ui"];
                 if (schemaNode["items"] && schemaNode["items"]["enum"]) arrSchema["enum"] = schemaNode["items"]["enum"];
                 arrSchema["title"] = arrSchema["title"] + ' [$index$] <span class="j-remove-array-item" data-index="$index$"> X </span>';

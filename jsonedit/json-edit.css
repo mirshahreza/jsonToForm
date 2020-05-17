@@ -21,7 +21,7 @@
     background-color: gainsboro !important;
 }
 
-.j-input-text,.j-input-select,.j-input-textarea,.j-input-date,.j-input-number,.j-input-html {
+.j-input-text,.j-input-select,.j-input-textarea,.j-input-date,.j-input-number,.j-input-html,.j-input-email,.j-input-tel {
     width: 100%;
     border-width: 0px;
     padding: 8px;
