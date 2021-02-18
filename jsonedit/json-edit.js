@@ -226,12 +226,13 @@
 
                     if (editor == "radio") {
                         var nameAtt = ' name="rdo_' + schemaName + '" ';
-                        inputBody = '<label><input checked value="' + options["radioNullCaption"] + '" ' + classAtt + ' type="radio" ' + nameAtt
-                            + dataValueNameAtt + requiredAtt + ' /><span class="j-input-radio-label">null</span></label>&nbsp;&nbsp;&nbsp;';
-                        console.log(inputBody);
+
+                        if (!isRequired) inputBody = '<label><input checked value="' + options["radioNullCaption"] + '" ' + classAtt + ' type="radio" ' + nameAtt
+                                + dataValueNameAtt + requiredAtt + ' /> <span class="j-input-radio-label">null</span></label>&nbsp;&nbsp;&nbsp;';
+
                         jQuery.each(schemaNode["enum"], function (index) {
                             inputBody += '<label><input value="' + schemaNode["enum"][index] + '" type="radio" ' + classAtt + nameAtt + dataValueNameAtt + requiredAtt
-                                + ' /><span class="j-input-radio-label">' + schemaNode["enum"][index] + '</span></label>&nbsp;&nbsp;&nbsp;';
+                                + ' /> <span class="j-input-radio-label">' + schemaNode["enum"][index] + '</span></label>&nbsp;&nbsp;&nbsp;';
                         });
                     }
 
@@ -315,11 +316,11 @@
         }
 
         function getIdBasedDataPath(dataPath) {
-            var n = replaceAll(dataPath, '][', '_');
-            n = replaceAll(n, '[', '');
-            n = replaceAll(n, ']', '');
-            n = replaceAll(n, '"', '');
-            n = replaceAll(n, "'", '');
+            let n = replaceAll(dataPath, '][', '_');
+            n = n.replaceAll(n, '[', '');
+            n = n.replaceAll(n, ']', '');
+            n = n.replaceAll(n, '"', '');
+            n = n.replaceAll(n, "'", '');
             return renderPlace.attr("id") + "_" + n;
         }
 
@@ -352,7 +353,6 @@
                 if ($(this).prop("tagName").toLowerCase() == "input" && $(this).prop("type").toLowerCase() == "checkbox") {
                     $(this).prop("checked", V(v, $(this).attr("data-path")) == true ? true : false);
                 } else if ($(this).prop("tagName").toLowerCase() == "input" && $(this).prop("type").toLowerCase() == "radio") {
-                    //$('[data-path="' + $(this).attr("data-path") + '"]').prop("checked", false);
                     $('[data-path="' + $(this).attr("data-path") + '"][value="' + V(v, $(this).attr("data-path")) + '"]').prop("checked", true);
                 } else {
                     if (options["autoTrimValues"] == "true") {
