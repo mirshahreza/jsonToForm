@@ -79,27 +79,33 @@
                     }
                 }
             }
-            if(elm.hasClass("j-input-email")){
-                var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/; // Regex validation for international number
+            if (elm.hasClass("j-input-email")) {
+                let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/; // Regex validation for international number
                 elm.attr("data-is-valid", (regex.test(elm.val())));
             }
-            if(elm.hasClass("j-input-tel")){
-                var regex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/; // Regex validation for email
+            if (elm.hasClass("j-input-tel")) {
+                let regex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/; // Regex validation for email
                 elm.attr("data-is-valid", (regex.test(elm.val())));
             }
             if (elm.hasClass("j-input-checkbox")) {
                 elm.attr("data-is-valid", (v_required == "true" && elm.prop("checked") == false ? "false" : "true"));
             }
+            if (elm.hasClass("j-input-radio")) {
+                elm.parent().parent().find('input[type=radio]').each(function () {
+                    if ($(this).prop("checked")) {
+                        elm.parent().parent().attr("data-is-valid", "true");
+                    }
+                });
+            }
 
             if (elm.hasClass("j-input-html")) {
-                var v = (elm.next(".j-input-html-div:first").text() == "")
+                let v = (elm.next(".j-input-html-div:first").text() == "")
                 elm.next(".j-input-html-div:first").attr("data-is-valid", (v_required == "true" && v ? "false" : "true"));
             }
         }
 
         function isValid() {
-            var v = renderPlace.find('[data-is-valid="false"]:first').length;
-            return (v > 0 ? false : true);
+            return renderPlace.find('[data-is-valid="false"]:first').length === 0;
         }
 
         function initEvents() {
@@ -155,11 +161,15 @@
 
         function valueChanged(changedObject) {
             ensureDataPath(changedObject.attr("data-path"));
-            var p = 'options["value"]' + changedObject.attr("data-path");
+            let p = 'options["value"]' + changedObject.attr("data-path");
             if (changedObject.prop("tagName").toLowerCase() == "input" && changedObject.prop("type").toLowerCase() == "checkbox") {
                 p = p + "=" + (changedObject.prop("checked") == true ? "true" : "false") + ";";
             } else {
                 p = p + "='" + (options["autoTrimValues"] == "true" ? jsonEscape(changedObject.val()).trim() : jsonEscape(changedObject.val())) + "';";
+            }
+
+            if (changedObject.prop("tagName").toLowerCase() == "input" && changedObject.prop("type").toLowerCase() == "radio") {
+                changedObject.parents("div").attr("data-is-valid", "true");
             }
             eval(p);
             validateInput(changedObject);
@@ -172,22 +182,24 @@
                 return renderSimpleNode(schemaNode, schemaName, (requiredItems ? requiredItems.includes(schemaName) : false));
             if (nodeType == "array") return renderArrayNode(schemaNode, schemaName);
             if (nodeType == "object") return renderObjectNode(schemaNode, schemaName);
+            if (nodeType == "spacer") return renderSpacerNode(schemaNode, schemaName);
             return "";
         }
 
         function renderSimpleNode(schemaNode, schemaName, isRequired) {
-            var ContainerT = '<table $hover-hint$ class="j-container"><tr class="j-oject-value-row">$$$</tr></table>';
-            var TitleT = '<td class="j-title-col">$$$</td><td class="j-sep-col"></td>';
-            var BodyT = '<td class="j-body-col">$$$</td>';
-            var requiredAtt = "", requiredStar = "", inputBody = "";
-            var additionalClass = " " + getUISetting(schemaNode, "class", "");
-            var nodeType = fixNU(schemaNode["type"], "string");
-            var hoverHint = getUISetting(schemaNode, "hoverHint", "");
-            var placeholderHint = getUISetting(schemaNode, "placeholderHint", "");
-            var inlineHint = getUISetting(schemaNode, "inlineHint", "");
-            var validationHint = getUISetting(schemaNode, "validationHint", "");
-            var dataValueNameAtt = ' data-value-name="' + schemaName + '" ';
-            var classAtt = "";
+            let ContainerT = '<table $hover-hint$ class="j-container"><tr class="j-oject-value-row">$$$</tr></table>';
+            let TitleT = '<td class="j-title-col">$$$</td><td class="j-sep-col"></td>';
+            let BodyT = '<td class="j-body-col">$$$</td>';
+            let requiredAtt = "", requiredStar = "", inputBody = "", classAtt = "";
+            let additionalClass = " " + getUISetting(schemaNode, "class", "");
+            let nodeType = fixNU(schemaNode["type"], "string");
+            let hoverHint = getUISetting(schemaNode, "hoverHint", "");
+            let placeholderHint = getUISetting(schemaNode, "placeholderHint", "");
+            let inlineHint = getUISetting(schemaNode, "inlineHint", "");
+            let validationHint = getUISetting(schemaNode, "validationHint", "");
+            let dataValueNameAtt = ' data-value-name="' + schemaName + '" ';
+
+            let disabledAttr = getUISetting(schemaNode, "disabled", false) === false ? "" : ` disabled="disabled" `;
 
             if (hoverHint != "") hoverHint = 'title="' + hoverHint + '"';
             if (placeholderHint != "") placeholderHint = ' placeholder="' + placeholderHint + '" ';
@@ -200,7 +212,7 @@
 
             if (nodeType == "boolean") {
                 classAtt = ' class="j-input j-input-checkbox' + additionalClass + '" ';
-                inputBody = '<input type="checkbox" ' + classAtt + dataValueNameAtt + requiredAtt + ' />';
+                inputBody = '<input type="checkbox" ' + classAtt + dataValueNameAtt + requiredAtt + disabledAttr + ' />';
             } else {
                 if (fixNU(schemaNode["enum"], "") == "") {
                     var editor = getUISetting(schemaNode, "editor", "text"), htmlEditor = "", minAtt = "", maxAtt = "";
@@ -212,13 +224,14 @@
                     maxAtt = fixNU(schemaNode["maxLength"], "") + fixNU(schemaNode["maximum"], "");
                     if (minAtt != "") minAtt = ' data-min="' + minAtt + '" ';
                     if (maxAtt != "") maxAtt = ' data-max="' + maxAtt + '" ';
+
                     if (editor == "textarea") {
                         classAtt = ' class="j-input j-input-textarea' + additionalClass + '" ';
-                        inputBody = '<textarea ' + classAtt + dataValueNameAtt + requiredAtt + minAtt + maxAtt + '></textarea>';
+                        inputBody = '<textarea ' + classAtt + dataValueNameAtt + requiredAtt + minAtt + maxAtt + disabledAttr + '></textarea>';
                     } else {
                         classAtt = ' class="j-input j-input-' + editor + additionalClass + '" ';
                         inputBody = (editor == "color" ? "&nbsp;&nbsp;" : "") + '<input type="' + editor + '" '
-                            + classAtt + dataValueNameAtt + placeholderHint + requiredAtt + minAtt + maxAtt + ' />' + htmlEditor;
+                            + classAtt + dataValueNameAtt + placeholderHint + requiredAtt + minAtt + maxAtt + disabledAttr + ' />' + htmlEditor;
                     }
                 } else {
                     var editor = getUISetting(schemaNode, "editor", "select");
@@ -227,13 +240,15 @@
                     if (editor == "radio") {
                         var nameAtt = ' name="rdo_' + schemaName + '" ';
 
-                        if (!isRequired) inputBody = '<label><input checked value="' + options["radioNullCaption"] + '" ' + classAtt + ' type="radio" ' + nameAtt
-                                + dataValueNameAtt + requiredAtt + ' /> <span class="j-input-radio-label">null</span></label>&nbsp;&nbsp;&nbsp;';
+                        if (!isRequired) inputBody = '&nbsp;<label><input checked value="' + options["radioNullCaption"] + '" ' + classAtt + ' type="radio" ' + nameAtt
+                            + dataValueNameAtt + requiredAtt + ' /> <span class="j-input-radio-label">null</span></label>&nbsp;&nbsp;&nbsp;';
 
                         jQuery.each(schemaNode["enum"], function (index) {
-                            inputBody += '<label><input value="' + schemaNode["enum"][index] + '" type="radio" ' + classAtt + nameAtt + dataValueNameAtt + requiredAtt
+                            inputBody += '&nbsp;<label><input value="' + schemaNode["enum"][index] + '" type="radio" ' + classAtt + nameAtt + dataValueNameAtt + requiredAtt + disabledAttr
                                 + ' /> <span class="j-input-radio-label">' + schemaNode["enum"][index] + '</span></label>&nbsp;&nbsp;&nbsp;';
                         });
+
+                        inputBody = `<div ${requiredAtt} ${disabledAttr} data-is-valid="false">${inputBody}</div>`;
                     }
 
                     if (editor == "select") {
@@ -241,7 +256,7 @@
                         jQuery.each(schemaNode["enum"], function (index) {
                             inputBody += '<option value="' + schemaNode["enum"][index] + '">' + schemaNode["enum"][index] + '</option>';
                         });
-                        inputBody = '<select ' + classAtt + dataValueNameAtt + requiredAtt + '>' + inputBody + "</select>";
+                        inputBody = '<select ' + classAtt + dataValueNameAtt + requiredAtt + disabledAttr + '>' + inputBody + "</select>";
                     }
                 }
             }
@@ -309,6 +324,10 @@
 
             arrayTemplates[itemTemplateId] = { "htmlTemplate": itemContainerT, "dataTemplate": itemDataTemplate };
             return ContainerT.replace("$$$", TitleT + BodyT.replace("$$$", ""));
+        }
+
+        function renderSpacerNode(schemaNode, schemaName) {
+            return `<div class="j-spacer-row">${fixNU(schemaNode["title"], "")}</div>`;
         }
 
         function getTitle(schemaNode, schemaName) {
