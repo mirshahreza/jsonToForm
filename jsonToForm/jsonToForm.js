@@ -1,6 +1,6 @@
 
 (function ($) {
-    $.fn.jsonEdit = function (options) {
+    $.fn.jsonToForm = function (options) {
 
         var renderPlace = this;
         var level = 0;

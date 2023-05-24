@@ -1,4 +1,4 @@
-**Why json-edit**
+**Why jsonToForm**
  - Fast and easy to use.
  - RTL support : just add style (direction:rtl) to the place holder element.
  - It just depends on jQuery.
