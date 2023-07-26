@@ -319,6 +319,7 @@
                 arrSchema = JSON.parse(JSON.stringify(V(options["schema"], r)));
                 arrSchema["title"] = fixNU(arrSchema["title"], "") + ' [$index$] <span class="j-remove-array-item" data-index="$index$"> X </span>';
                 itemContainerT = renderSchemaNode(arrSchema, "$index$");
+                itemDataTemplate = {};
             }
             level--;
 
