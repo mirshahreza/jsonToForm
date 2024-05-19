@@ -1,4 +1,3 @@
-
 (function ($) {
     $.fn.jsonToForm = function (options) {
 
@@ -165,7 +164,7 @@
             if (changedObject.prop("tagName").toLowerCase() == "input" && changedObject.prop("type").toLowerCase() == "checkbox") {
                 p = p + "=" + (changedObject.prop("checked") == true ? "true" : "false") + ";";
             } else {
-                p = p + "='" + (options["autoTrimValues"] == "true" ? jsonEscape(changedObject.val()).trim() : jsonEscape(changedObject.val())) + "';";
+                p = p + "='" + (options["autoTrimValues"] == "true" ? jsonEscape(changedObject.val()) : jsonEscape(changedObject.val())) + "';";
             }
 
             if (changedObject.prop("tagName").toLowerCase() == "input" && changedObject.prop("type").toLowerCase() == "radio") {
@@ -215,7 +214,8 @@
                 inputBody = '<input type="checkbox" ' + classAtt + dataValueNameAtt + requiredAtt + disabledAttr + ' />';
             } else {
                 if (fixNU(schemaNode["enum"], "") == "") {
-                    var editor = getUISetting(schemaNode, "editor", "text"), htmlEditor = "", minAtt = "", maxAtt = "";
+                    var editor = getUISetting(schemaNode, "editor", "text"), htmlEditor = "", minAtt = "", maxAtt = "", patternAtt = "";
+                    if (nodeType == "date") { editor = "date"; patternAtt = " \d{4}-\d{2}-\d{2}"; }
                     if (nodeType == "email") editor = "email";
                     if (nodeType == "tel") editor = "tel";
                     if (nodeType == "number" || nodeType == "integer") editor = "number";
@@ -227,11 +227,11 @@
 
                     if (editor == "textarea") {
                         classAtt = ' class="j-input j-input-textarea' + additionalClass + '" ';
-                        inputBody = '<textarea ' + classAtt + dataValueNameAtt + requiredAtt + minAtt + maxAtt + disabledAttr + '></textarea>';
+                        inputBody = '<textarea rows="4" ' + classAtt + dataValueNameAtt + requiredAtt + minAtt + maxAtt + disabledAttr + '></textarea>';
                     } else {
                         classAtt = ' class="j-input j-input-' + editor + additionalClass + '" ';
                         inputBody = (editor == "color" ? "&nbsp;&nbsp;" : "") + '<input type="' + editor + '" '
-                            + classAtt + dataValueNameAtt + placeholderHint + requiredAtt + minAtt + maxAtt + disabledAttr + ' />' + htmlEditor;
+                            + classAtt + dataValueNameAtt + placeholderHint + requiredAtt + minAtt + maxAtt + disabledAttr + patternAtt + ' />' + htmlEditor;
                     }
                 } else {
                     var editor = getUISetting(schemaNode, "editor", "select");
@@ -319,7 +319,6 @@
                 arrSchema = JSON.parse(JSON.stringify(V(options["schema"], r)));
                 arrSchema["title"] = fixNU(arrSchema["title"], "") + ' [$index$] <span class="j-remove-array-item" data-index="$index$"> X </span>';
                 itemContainerT = renderSchemaNode(arrSchema, "$index$");
-                itemDataTemplate = {};
             }
             level--;
 
@@ -377,7 +376,7 @@
                 } else {
                     if (options["autoTrimValues"] == "true") {
                         var _temp = V(v, $(this).attr("data-path"));
-                        if (_temp) _temp = _temp.trim();
+                        if (_temp) _temp = _temp;
                         $(this).val(_temp);
                     } else {
                         $(this).val(V(v, $(this).attr("data-path")));
@@ -498,6 +497,7 @@
             var str = source;
             return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
         }
+
 
     }
 }(jQuery));
