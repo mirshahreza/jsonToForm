@@ -2,41 +2,59 @@
     width: 100%;
     border-collapse: collapse;
     border-width: 0px;
+    border-radius:5px;
 }
-
-
 
 .j-container td {
     padding: 0px;
 }
 
 .j-container tr {
-    outline: 1px solid gainsboro;
+    outline: 0px solid gainsboro;
 }
 
 .j-title-col {
-    width: 200px;
+    width: 400px;
 }
 
 .j-sep-col {
-    width: 3px;
-    background-color: gainsboro !important;
+    width: 0px;
+    background-color:#f6f6f6;
+}
+
+.j-spacer-row {
+    min-height:5px;
+    background-color:#e8f2ff;
+    margin:10px 0px 10px 0px;
 }
 
 .j-input-text,.j-input-select,.j-input-textarea,.j-input-date,.j-input-number,.j-input-html,.j-input-email,.j-input-tel {
     width: 100%;
-    border-width: 0px;
-    padding: 8px;
+    border:2px solid #e6e6e6;
+    padding: 5px;
+}
+
+.j-input-text{
+    background-color:#fefefe;
+    border-radius:5px;
+}
+
+.j-input-text:disabled{
+    border-color:#f0f5ff;
+    background-color:#f5f8ff;
 }
 
 .j-input-radio-label,.j-input-radio {
-    margin-top: 6px;
+    vertical-align:middle;
+}
+
+.j-input-radio-label{
+    margin-left:5px;
 }
 
 .j-input-text::placeholder{
     color: silver;
 }
-
 
 .j-input-html-div{
     padding: 8px;
@@ -80,12 +98,12 @@
 
 
 .j-oject-value-row td {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .j-oject-value-row .j-title-col {
-    padding: 8px !important;
-    font-size: 16px;
+    padding: 6px !important;
+    font-size: 12px;
 }
 
 
@@ -117,7 +135,9 @@
     display: none;
 }
 
-.j-body-col {}
+.j-body-col {
+    font-size: 12px;
+}
 
 .j-inline-help {
     margin-top: 7px !important;
