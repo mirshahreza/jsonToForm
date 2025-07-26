@@ -46,60 +46,72 @@
             });
         }
 
+        function setValidation(elm, isValid) {
+            elm.attr("data-is-valid", isValid ? "true" : "false");
+            return isValid;
+        }
+
         function validateInput(elm) {
-            var v_required = fixNU(elm.attr("data-required"), "false"),
-                v_min = elm.attr("data-min"), v_max = elm.attr("data-max");
+            const v_required = fixNU(elm.attr("data-required"), "false") === "true";
+            const v_min = elm.attr("data-min") ? parseFloat(elm.attr("data-min")) : null;
+            const v_max = elm.attr("data-max") ? parseFloat(elm.attr("data-max")) : null;
 
-            v_min = (v_min ? parseFloat(v_min) : null);
-            v_max = (v_max ? parseFloat(v_max) : null);
-
-            if (elm.hasClass("j-input-text") || elm.hasClass("j-input-textarea") || elm.hasClass("j-input-select") || elm.hasClass("j-input-number") || elm.hasClass("j-input-date")) {
-                elm.attr("data-is-valid", (v_required == "true" && fixNU(elm.val(), "") == "" ? "false" : "true"));
-                if (elm.attr("data-is-valid") == "false") return;
-                if (v_min) {
-                    if (elm.hasClass("j-input-text") || elm.hasClass("j-input-textarea")) {
-                        elm.attr("data-is-valid", (elm.val().length < v_min ? "false" : "true"));
-                        if (elm.attr("data-is-valid") == "false") return;
-                    }
-                    if (elm.hasClass("j-input-number")) {
-                        elm.attr("data-is-valid", (elm.val() < v_min ? "false" : "true"));
-                        if (elm.attr("data-is-valid") == "false") return;
+            const isTextInput = elm.hasClass("j-input-text") || elm.hasClass("j-input-textarea");
+            const isNumberInput = elm.hasClass("j-input-number");
+            const isBasicInput = isTextInput || elm.hasClass("j-input-select") || isNumberInput || elm.hasClass("j-input-date");
+            
+            if (isBasicInput) {
+                // Check required field
+                if (!setValidation(elm, !(v_required && fixNU(elm.val(), "") === ""))) return;
+                
+                // Check minimum constraints
+                if (v_min !== null) {
+                    if (isTextInput) {
+                        if (!setValidation(elm, elm.val().length >= v_min)) return;
+                    } else if (isNumberInput) {
+                        if (!setValidation(elm, parseFloat(elm.val()) >= v_min)) return;
                     }
                 }
-                if (v_max) {
-                    if (elm.hasClass("j-input-text") || elm.hasClass("j-input-textarea")) {
-                        elm.attr("data-is-valid", (elm.val().length > v_max ? "false" : "true"));
-                        if (elm.attr("data-is-valid") == "false") return;
-                    }
-
-                    if (elm.hasClass("j-input-number")) {
-                        elm.attr("data-is-valid", (elm.val() > v_max ? "false" : "true"));
-                        if (elm.attr("data-is-valid") == "false") return;
+                
+                // Check maximum constraints
+                if (v_max !== null) {
+                    if (isTextInput) {
+                        if (!setValidation(elm, elm.val().length <= v_max)) return;
+                    } else if (isNumberInput) {
+                        if (!setValidation(elm, parseFloat(elm.val()) <= v_max)) return;
                     }
                 }
             }
+            
             if (elm.hasClass("j-input-email")) {
-                let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/; // Regex validation for international number
-                elm.attr("data-is-valid", (regex.test(elm.val())));
+                const emailRegex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                setValidation(elm, emailRegex.test(elm.val()));
             }
+            
             if (elm.hasClass("j-input-tel")) {
-                let regex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/; // Regex validation for email
-                elm.attr("data-is-valid", (regex.test(elm.val())));
+                const telRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+                setValidation(elm, telRegex.test(elm.val()));
             }
+            
             if (elm.hasClass("j-input-checkbox")) {
-                elm.attr("data-is-valid", (v_required == "true" && elm.prop("checked") == false ? "false" : "true"));
+                const v_required = fixNU(elm.attr("data-required"), "false") === "true";
+                setValidation(elm, !(v_required && !elm.prop("checked")));
             }
+            
             if (elm.hasClass("j-input-radio")) {
+                let hasChecked = false;
                 elm.parent().parent().find('input[type=radio]').each(function () {
                     if ($(this).prop("checked")) {
-                        elm.parent().parent().attr("data-is-valid", "true");
+                        hasChecked = true;
                     }
                 });
+                elm.parent().parent().attr("data-is-valid", hasChecked ? "true" : "false");
             }
 
             if (elm.hasClass("j-input-html")) {
-                let v = (elm.next(".j-input-html-div:first").text() == "")
-                elm.next(".j-input-html-div:first").attr("data-is-valid", (v_required == "true" && v ? "false" : "true"));
+                const v_required = fixNU(elm.attr("data-required"), "false") === "true";
+                const isEmpty = elm.next(".j-input-html-div:first").text() === "";
+                elm.next(".j-input-html-div:first").attr("data-is-valid", !(v_required && isEmpty) ? "true" : "false");
             }
         }
 
@@ -108,13 +120,16 @@
         }
 
         function initEvents() {
-            renderPlace.find(".j-ec").off("click").on("click", function () { toggleSubTree(this); });
-            renderPlace.find(".j-add-array-item").off("click").on("click", function () { addArrayItem($(this), true, null); });
-            renderPlace.find(".j-remove-array-item").off("click").on("click", function () { removeArrayItem($(this)); });
-            renderPlace.find(".j-input-text,.j-input-textarea,.j-input-date,.j-input-number,.j-input-email,.j-input-tel").off("keyup").on("keyup", function () { valueChanged($(this)) });
-            renderPlace.find(".j-input-checkbox,.j-input-radio,.j-input-select,.j-input-color,.j-input-date,.j-input-number,.j-input-html").off("change").on("change", function () { valueChanged($(this)) });
-            renderPlace.find(".j-input-html-div").off("keyup").on("keyup", function () { changeInput($(this)) });
-            renderPlace.find(".j-input-html").off("focus").on("focus", function () { $(this).parents("td:first").find(".j-input-html-div:first").focus(); });
+            // Cache frequently used selectors for better performance
+            const $renderPlace = renderPlace;
+            
+            $renderPlace.find(".j-ec").off("click").on("click", function () { toggleSubTree(this); });
+            $renderPlace.find(".j-add-array-item").off("click").on("click", function () { addArrayItem($(this), true, null); });
+            $renderPlace.find(".j-remove-array-item").off("click").on("click", function () { removeArrayItem($(this)); });
+            $renderPlace.find(".j-input-text,.j-input-textarea,.j-input-date,.j-input-number,.j-input-email,.j-input-tel").off("keyup").on("keyup", function () { valueChanged($(this)) });
+            $renderPlace.find(".j-input-checkbox,.j-input-radio,.j-input-select,.j-input-color,.j-input-date,.j-input-number,.j-input-html").off("change").on("change", function () { valueChanged($(this)) });
+            $renderPlace.find(".j-input-html-div").off("keyup").on("keyup", function () { changeInput($(this)) });
+            $renderPlace.find(".j-input-html").off("focus").on("focus", function () { $(this).parents("td:first").find(".j-input-html-div:first").focus(); });
         }
 
         function changeInput(htmlDiv) {
@@ -185,12 +200,12 @@
         }
 
         function renderSchemaNode(schemaNode, schemaName, requiredItems) {
-            var nodeType = fixNU(schemaNode["type"], "string");
-            if (nodeType == "string" || nodeType == "number" || nodeType == "integer" || nodeType == "boolean" || nodeType == "email" || nodeType == "tel")
+            const nodeType = fixNU(schemaNode["type"], "string");
+            if (nodeType === "string" || nodeType === "number" || nodeType === "integer" || nodeType === "boolean" || nodeType === "email" || nodeType === "tel")
                 return renderSimpleNode(schemaNode, schemaName, (requiredItems ? requiredItems.includes(schemaName) : false));
-            if (nodeType == "array") return renderArrayNode(schemaNode, schemaName);
-            if (nodeType == "object") return renderObjectNode(schemaNode, schemaName);
-            if (nodeType == "spacer") return renderSpacerNode(schemaNode, schemaName);
+            if (nodeType === "array") return renderArrayNode(schemaNode, schemaName);
+            if (nodeType === "object") return renderObjectNode(schemaNode, schemaName);
+            if (nodeType === "spacer") return renderSpacerNode(schemaNode, schemaName);
             return "";
         }
 
@@ -324,9 +339,10 @@
             }
 
             if (arrType.startsWith("#")) {
-                var r = "['" + replaceAll(arrType.replace('#/', ""), '/', "']['") + "']";
+                const pathSegments = arrType.replace('#/', "").split('/');
+                const r = `['${pathSegments.join("']['")}']`;
                 arrSchema = JSON.parse(JSON.stringify(V(options["schema"], r)));
-                arrSchema["title"] = fixNU(arrSchema["title"], "") + ' [$index$] <span class="j-remove-array-item" data-index="$index$"> X </span>';
+                arrSchema["title"] = `${fixNU(arrSchema["title"], "")} [\$index\$] <span class="j-remove-array-item" data-index="\$index\$"> X </span>`;
                 itemContainerT = renderSchemaNode(arrSchema, "$index$");
             }
             level--;
@@ -447,8 +463,8 @@
         function ensureDataPath(dataPath) {
             const pathParts = replaceAll(dataPath, "][", "].[").split('.');
             let pathCursor = "";
-            pathParts.forEach(function (item, index, arr) {
-                pathCursor = pathCursor + item.toString();
+            pathParts.forEach((item) => {
+                pathCursor += item.toString();
                 if (V(options["value"], pathCursor) === undefined || V(options["value"], pathCursor) === null) {
                     setV(options["value"], pathCursor, {});
                 }
