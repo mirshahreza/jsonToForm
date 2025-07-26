@@ -124,33 +124,38 @@
         }
 
         function removeArrayItem(arrItem) {
-            var itemIndex = arrItem.attr("data-index");
-            var nodeToRemove = arrItem.parents("table:first");
-            var p = nodeToRemove.parents("td:first").attr("data-path");
-            eval('options["value"]' + p + '.splice(' + itemIndex + ',1);');
+            const itemIndex = parseInt(arrItem.attr("data-index"));
+            const nodeToRemove = arrItem.parents("table:first");
+            const p = nodeToRemove.parents("td:first").attr("data-path");
+            const array = V(options["value"], p);
+            if (array && Array.isArray(array)) {
+                array.splice(itemIndex, 1);
+            }
             nodeToRemove.remove();
             setValue(options["value"]);
             if (options["afterValueChanged"]) options["afterValueChanged"](options["value"], options["schema"]);
         }
 
         function addArrayItem(arrayContainer, needInitiations, itemIndex) {
-            var tId = arrayContainer.attr("data-template-id");
-            var htmlTemplate = arrayTemplates[tId]["htmlTemplate"];
-            var dataTemplate = JSON.parse(JSON.stringify(arrayTemplates[tId]["dataTemplate"]));
-            var dataPath = arrayContainer.parents("tr:first").next().find("td:first").attr("data-path");
+            const tId = arrayContainer.attr("data-template-id");
+            const htmlTemplate = arrayTemplates[tId]["htmlTemplate"];
+            const dataTemplate = JSON.parse(JSON.stringify(arrayTemplates[tId]["dataTemplate"]));
+            const dataPath = arrayContainer.parents("tr:first").next().find("td:first").attr("data-path");
+            
             if (V(options["value"], dataPath) == undefined || V(options["value"], dataPath) == null) {
-                eval('options["value"]' + dataPath + "=[];");
+                setV(options["value"], dataPath, []);
             }
 
             if (itemIndex == null) {
-                var arrLen = null;
-                eval('options["value"]' + dataPath + ".push(dataTemplate);");
-                eval('arrLen = options["value"]' + dataPath + ".length;");
-                itemIndex = arrLen - 1;
+                const array = V(options["value"], dataPath);
+                if (array && Array.isArray(array)) {
+                    array.push(dataTemplate);
+                    itemIndex = array.length - 1;
+                }
             }
 
-            htmlTemplate = replaceAll(htmlTemplate, "$index$", itemIndex);
-            arrayContainer.parents("tr:first").next().find("td:first").append(htmlTemplate);
+            const finalHtmlTemplate = replaceAll(htmlTemplate, "$index$", itemIndex);
+            arrayContainer.parents("tr:first").next().find("td:first").append(finalHtmlTemplate);
 
             if (needInitiations) {
                 initValuePathes();
@@ -160,17 +165,21 @@
 
         function valueChanged(changedObject) {
             ensureDataPath(changedObject.attr("data-path"));
-            let p = 'options["value"]' + changedObject.attr("data-path");
-            if (changedObject.prop("tagName").toLowerCase() == "input" && changedObject.prop("type").toLowerCase() == "checkbox") {
-                p = p + "=" + (changedObject.prop("checked") == true ? "true" : "false") + ";";
+            const dataPath = changedObject.attr("data-path");
+            let value;
+            
+            if (changedObject.prop("tagName").toLowerCase() === "input" && changedObject.prop("type").toLowerCase() === "checkbox") {
+                value = changedObject.prop("checked");
             } else {
-                p = p + "='" + (options["autoTrimValues"] == "true" ? jsonEscape(changedObject.val()) : jsonEscape(changedObject.val())) + "';";
+                const rawValue = changedObject.val();
+                value = options["autoTrimValues"] === "true" ? jsonEscape(rawValue) : jsonEscape(rawValue);
             }
 
-            if (changedObject.prop("tagName").toLowerCase() == "input" && changedObject.prop("type").toLowerCase() == "radio") {
+            if (changedObject.prop("tagName").toLowerCase() === "input" && changedObject.prop("type").toLowerCase() === "radio") {
                 changedObject.parents("div").attr("data-is-valid", "true");
             }
-            eval(p);
+            
+            setV(options["value"], dataPath, value);
             validateInput(changedObject);
             if (options["afterValueChanged"]) options["afterValueChanged"](options["value"], options["schema"]);
         }
@@ -390,22 +399,21 @@
         }
 
         function addArrayItemsToTheDOM() {
-            var arrayNodes = renderPlace.find('[data-array-loaded="false"]');
-            if (arrayNodes.length == 0) {
+            const arrayNodes = renderPlace.find('[data-array-loaded="false"]');
+            if (arrayNodes.length === 0) {
                 initValuePathes();
                 return;
             }
             arrayNodes.each(function () {
-                var addArrayItemBtn = $(this);
-                var dataPath = addArrayItemBtn.parents("tr:first").next("tr").find("td:first").attr("data-path");
+                const addArrayItemBtn = $(this);
+                let dataPath = addArrayItemBtn.parents("tr:first").next("tr").find("td:first").attr("data-path");
                 if (dataPath === undefined) {
-                    var o = addArrayItemBtn.parents("tr:first").next("tr").find("td:first");
+                    const o = addArrayItemBtn.parents("tr:first").next("tr").find("td:first");
                     o.attr("data-path", generatePath(o));
                     dataPath = addArrayItemBtn.parents("tr:first").next("tr").find("td:first").attr("data-path");
                 }
-                var arr = null;
-                eval('arr = options["value"]' + dataPath + ';');
-                if (arr) {
+                const arr = V(options["value"], dataPath);
+                if (arr && Array.isArray(arr)) {
                     arr.forEach(function (item, index, arr) {
                         addArrayItem(addArrayItemBtn, false, index);
                     });
@@ -437,13 +445,12 @@
         }
 
         function ensureDataPath(dataPath) {
-            var pathParts = replaceAll(dataPath, "][", "].[").split('.');
-            var pathCursor = "";
+            const pathParts = replaceAll(dataPath, "][", "].[").split('.');
+            let pathCursor = "";
             pathParts.forEach(function (item, index, arr) {
                 pathCursor = pathCursor + item.toString();
                 if (V(options["value"], pathCursor) === undefined || V(options["value"], pathCursor) === null) {
-                    var phrase = 'options["value"]' + pathCursor + '={};';
-                    eval(phrase);
+                    setV(options["value"], pathCursor, {});
                 }
             });
         }
@@ -477,6 +484,46 @@
                 return current;
             } catch (e) { 
                 return null; 
+            }
+        }
+
+        function setV(o, p, value) {
+            try {
+                if (!p || p === '') return;
+                
+                // Remove leading brackets and split by '][' 
+                const pathParts = p.replace(/^\[/, '').replace(/\]$/, '').split('][');
+                let current = o;
+                
+                // Navigate to the parent of the target property
+                for (let i = 0; i < pathParts.length - 1; i++) {
+                    const part = pathParts[i];
+                    if (part === '') continue;
+                    
+                    const cleanPart = part.replace(/^['"]|['"]$/g, '');
+                    
+                    if (current[cleanPart] === undefined || current[cleanPart] === null) {
+                        // Determine if next part is array index or object property
+                        const nextPart = pathParts[i + 1];
+                        const nextCleanPart = nextPart ? nextPart.replace(/^['"]|['"]$/g, '') : '';
+                        current[cleanPart] = /^\d+$/.test(nextCleanPart) ? [] : {};
+                    }
+                    
+                    current = current[cleanPart];
+                }
+                
+                // Set the final property
+                const finalPart = pathParts[pathParts.length - 1];
+                if (finalPart !== '') {
+                    const cleanFinalPart = finalPart.replace(/^['"]|['"]$/g, '');
+                    if (/^\d+$/.test(cleanFinalPart)) {
+                        current[parseInt(cleanFinalPart)] = value;
+                    } else {
+                        current[cleanFinalPart] = value;
+                    }
+                }
+            } catch (e) {
+                console.error('Error setting value:', e);
             }
         }
 
