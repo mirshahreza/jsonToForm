@@ -450,8 +450,34 @@
 
         function V(o, p) {
             try {
-                return eval("o" + p);
-            } catch (e) { return null; }
+                // Parse path like ["stringField"] or ["objectArray"][0]["name"]
+                if (!p || p === '') return o;
+                
+                // Remove leading brackets and split by '][' 
+                const pathParts = p.replace(/^\[/, '').replace(/\]$/, '').split('][');
+                let current = o;
+                
+                for (let part of pathParts) {
+                    if (part === '') continue;
+                    // Remove quotes from property names
+                    const cleanPart = part.replace(/^['"]|['"]$/g, '');
+                    
+                    if (current === null || current === undefined) {
+                        return null;
+                    }
+                    
+                    // Handle array indices (numeric) vs object properties
+                    if (/^\d+$/.test(cleanPart)) {
+                        current = current[parseInt(cleanPart)];
+                    } else {
+                        current = current[cleanPart];
+                    }
+                }
+                
+                return current;
+            } catch (e) { 
+                return null; 
+            }
         }
 
         function jsonEscape(str) {
