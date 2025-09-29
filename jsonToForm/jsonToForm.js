@@ -60,8 +60,7 @@
             "getSchema": function () { return getSchema(); },
             "getValue": function () { return getValue(); },
             "setValue": function (v) { return setValue(v); },
-            "setRenderMode": function (mode) { return setRenderMode(mode); },
-            "getRenderMode": function () { return options["renderMode"]; }
+            // Render mode functions removed
         };
         return output;
 
@@ -76,8 +75,7 @@
             options["radioNullCaption"] = options["radioNullCaption"] || 'null';
             options["selectNullCaption"] = options["selectNullCaption"] || '';
             options["treeExpandCollapseButton"] = options["treeExpandCollapseButton"] || 'true';
-            options["renderMode"] = options["renderMode"] || 'current'; // current, propertyGrid, standardForm
-            options["showModeSelector"] = options["showModeSelector"] !== false;
+            // Render mode functionality removed - using only default current mode
         }
 
         function initWidget() {
@@ -86,10 +84,7 @@
             arrayTemplates = {};
             var widgetContent = "";
             
-            // Add mode selector if enabled
-            if (options["showModeSelector"]) {
-                widgetContent += renderModeSelector();
-            }
+            // Mode selector functionality removed
             
             widgetContent += renderSchemaNode(options["schema"], "");
             console.log("📄 Generated HTML content:", widgetContent);
@@ -184,10 +179,7 @@
             renderPlace.find(".j-input-html-div").off("keyup").on("keyup", function () { changeInput($(this)) });
             renderPlace.find(".j-input-html").off("focus").on("focus", function () { $(this).parents("td:first").find(".j-input-html-div:first").focus(); });
             
-            // Mode selector event
-            renderPlace.find(".j-mode-select").off("change").on("change", function () {
-                setRenderMode($(this).val());
-            });
+            // Mode selector event removed
         }
 
         function changeInput(htmlDiv) {
@@ -269,17 +261,9 @@
             
             var arrayBody, arrayContainerElement, dataPath;
             
-            // Handle different render modes
-            if (options["renderMode"] === "propertyGrid") {
-                arrayContainerElement = arrayContainer.closest(".j-property-grid-array-container");
-                arrayBody = arrayContainerElement.find(".j-property-grid-array-body");
-            } else if (options["renderMode"] === "standardForm") {
-                arrayContainerElement = arrayContainer.closest(".j-standard-form-array");
-                arrayBody = arrayContainerElement.find(".j-standard-form-array-body");
-            } else {
-                arrayContainerElement = arrayContainer.closest(".j-array-container");
-                arrayBody = arrayContainerElement.find(".j-array-body");
-            }
+            // Use default array container handling
+            arrayContainerElement = arrayContainer.closest(".j-array-container");
+            arrayBody = arrayContainerElement.find(".j-array-body");
             
             if (!arrayContainerElement.length || !arrayBody.length) {
                 return;
@@ -334,11 +318,7 @@
         }
 
         function renderSchemaNode(schemaNode, schemaName, requiredItems) {
-            // Use mode-aware rendering if not the default current mode
-            if (options["renderMode"] !== 'current') {
-                return renderSchemaNodeWithMode(schemaNode, schemaName, requiredItems);
-            }
-            
+            // Use only default rendering mode
             var nodeType = fixNU(schemaNode["type"], "string");
             if (nodeType == "string" || nodeType == "number" || nodeType == "integer" || nodeType == "boolean" || nodeType == "email" || nodeType == "tel")
                 return renderSimpleNode(schemaNode, schemaName, (requiredItems ? requiredItems.includes(schemaName) : false));
@@ -593,17 +573,9 @@
                 var addArrayItemBtn = $(this);
                 var arrayContainer, arrayBody, dataPath;
                 
-                // Handle different render modes
-                if (options["renderMode"] === "propertyGrid") {
-                    arrayContainer = addArrayItemBtn.closest(".j-property-grid-array-container");
-                    arrayBody = arrayContainer.find(".j-property-grid-array-body");
-                } else if (options["renderMode"] === "standardForm") {
-                    arrayContainer = addArrayItemBtn.closest(".j-standard-form-array");
-                    arrayBody = arrayContainer.find(".j-standard-form-array-body");
-                } else {
-                    arrayContainer = addArrayItemBtn.closest(".j-array-container");
-                    arrayBody = arrayContainer.find(".j-array-body");
-                }
+                // Use default array container handling
+                arrayContainer = addArrayItemBtn.closest(".j-array-container");
+                arrayBody = arrayContainer.find(".j-array-body");
                 
                 if (arrayContainer.length === 0 || arrayBody.length === 0) {
                     return;
@@ -722,322 +694,11 @@
             return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
         }
 
-        function renderModeSelector() {
-            return `
-                <div class="j-mode-selector">
-                    <label>نمایش:</label>
-                    <select class="j-mode-select">
-                        <option value="current" ${options["renderMode"] === 'current' ? 'selected' : ''}>حالت فعلی</option>
-                        <option value="propertyGrid" ${options["renderMode"] === 'propertyGrid' ? 'selected' : ''}>جدول ویژگی‌ها</option>
-                        <option value="standardForm" ${options["renderMode"] === 'standardForm' ? 'selected' : ''}>فرم استاندارد</option>
-                    </select>
-                </div>
-            `;
-        }
+        // Mode selector and render mode functions removed
 
-        function setRenderMode(mode) {
-            if (['current', 'propertyGrid', 'standardForm'].includes(mode)) {
-                options["renderMode"] = mode;
-                initWidget();
-                return true;
-            }
-            return false;
-        }
+        // renderSchemaNodeWithMode function removed
 
-        function renderSchemaNodeWithMode(schemaNode, schemaName, requiredItems) {
-            switch (options["renderMode"]) {
-                case 'propertyGrid':
-                    return renderPropertyGridNode(schemaNode, schemaName, requiredItems);
-                case 'standardForm':
-                    return renderStandardFormNode(schemaNode, schemaName, requiredItems);
-                default:
-                    // Fallback to original rendering for 'current' mode
-                    var nodeType = fixNU(schemaNode["type"], "string");
-                    if (nodeType == "string" || nodeType == "number" || nodeType == "integer" || nodeType == "boolean" || nodeType == "email" || nodeType == "tel")
-                        return renderSimpleNode(schemaNode, schemaName, (requiredItems ? requiredItems.includes(schemaName) : false));
-                    if (nodeType == "array") return renderArrayNode(schemaNode, schemaName);
-                    if (nodeType == "object") return renderObjectNode(schemaNode, schemaName);
-                    if (nodeType == "spacer") return renderSpacerNode(schemaNode, schemaName);
-                    return "";
-            }
-        }
-
-        function renderPropertyGridNode(schemaNode, schemaName, requiredItems) {
-            var nodeType = fixNU(schemaNode["type"], "string");
-            
-            if (nodeType === "object") {
-                return renderPropertyGridObject(schemaNode, schemaName, requiredItems);
-            } else if (nodeType === "array") {
-                return renderPropertyGridArray(schemaNode, schemaName);
-            } else {
-                return renderPropertyGridSimple(schemaNode, schemaName, requiredItems);
-            }
-        }
-
-        function renderPropertyGridObject(schemaNode, schemaName, requiredItems) {
-            var properties = schemaNode["properties"] ? Object.keys(schemaNode["properties"]) : [];
-            var tableHtml = '<div class="j-property-grid-container" data-value-name="' + (schemaName || '') + '">';
-            
-            if (schemaName) {
-                var title = getTitle(schemaNode, schemaName);
-                tableHtml += '<div class="j-property-grid-header">' + title + '</div>';
-            }
-            
-            if (properties.length > 0) {
-                tableHtml += '<table class="j-property-grid-table">';
-                tableHtml += '<thead><tr><th>ویژگی</th><th>مقدار</th><th>عملیات</th></tr></thead><tbody>';
-                
-                level++;
-                properties.forEach(function (item, index, arr) {
-                    var propSchema = schemaNode["properties"][item];
-                    var isRequired = schemaNode["required"] && schemaNode["required"].includes(item);
-                    tableHtml += renderPropertyGridRow(propSchema, item, isRequired);
-                });
-                level--;
-                
-                tableHtml += '</tbody></table>';
-            } else {
-                tableHtml += '<div class="j-property-grid-empty">هیچ ویژگی‌ای تعریف نشده است</div>';
-            }
-            
-            tableHtml += '</div>';
-            return tableHtml;
-        }
-
-        function renderPropertyGridRow(schemaNode, schemaName, isRequired) {
-            var nodeType = fixNU(schemaNode["type"], "string");
-            var requiredStar = isRequired ? '<span class="j-required-star">*</span>' : '';
-            var title = fixNU(schemaNode["title"], schemaName);
-            
-            var inputHtml = "";
-            if (nodeType === "object") {
-                // Render nested object properties as sub-table
-                inputHtml = renderPropertyGridObject(schemaNode, "", schemaNode["required"] || []);
-            } else if (nodeType === "array") {
-                // Render array container
-                inputHtml = renderPropertyGridArray(schemaNode, schemaName);
-            } else {
-                // Render simple input
-                inputHtml = generateSimpleInput(schemaNode, schemaName, isRequired);
-            }
-            
-            return '<tr class="j-property-grid-row" data-value-name="' + schemaName + '">' +
-                   '<td class="j-property-name">' + title + requiredStar + '</td>' +
-                   '<td class="j-property-value">' + inputHtml + '</td>' +
-                   '<td class="j-property-actions"></td>' +
-                   '</tr>';
-        }
-
-        function renderPropertyGridArray(schemaNode, schemaName) {
-            var templateId = schemaName + "_" + level + "_pg";
-            
-            var containerHtml = '<div class="j-property-grid-array-container" data-value-name="' + schemaName + '">';
-            containerHtml += '<div class="j-property-grid-array-header">';
-            containerHtml += '<span>آرایه</span>';
-            containerHtml += '<button type="button" class="j-add-array-item" data-template-id="' + templateId + '" data-array-loaded="false">افزودن</button>';
-            containerHtml += '</div>';
-            containerHtml += '<div class="j-property-grid-array-body"></div>';
-            containerHtml += '</div>';
-            
-            // Create array template
-            var arrType = getArrayType(schemaNode);
-            var itemSchema = { "type": arrType };
-            if (schemaNode["items"]) {
-                if (schemaNode["items"]["ui"]) itemSchema["ui"] = schemaNode["items"]["ui"];
-                if (schemaNode["items"]["enum"]) itemSchema["enum"] = schemaNode["items"]["enum"];
-                if (schemaNode["items"]["properties"]) itemSchema = schemaNode["items"];
-            }
-            
-            var itemTemplate;
-            // Handle $ref arrays
-            if (arrType.startsWith("#/")) {
-                var refPath = arrType.replace('#/', '').split('/');
-                var refSchema = options["schema"];
-                refPath.forEach(function(part) {
-                    refSchema = refSchema[part];
-                });
-                if (refSchema) {
-                    itemTemplate = renderPropertyGridObject(refSchema, "", []);
-                } else {
-                    itemTemplate = '<div class="j-error">Reference not found: ' + arrType + '</div>';
-                }
-            } else if (arrType === "object" && schemaNode["items"] && schemaNode["items"]["properties"]) {
-                itemTemplate = renderPropertyGridObject(schemaNode["items"], "", []);
-            } else {
-                itemTemplate = generateSimpleInput(itemSchema, "$index$", false);
-            }
-            
-            arrayTemplates[templateId] = {
-                htmlTemplate: '<div class="j-array-item-grid">' + itemTemplate + '<button class="j-remove-array-item" data-index="$index$">حذف</button></div>',
-                dataTemplate: (arrType === "object" ? {} : "")
-            };
-            
-            return containerHtml;
-        }
-
-        function renderPropertyGridSimple(schemaNode, schemaName, requiredItems) {
-            var isRequired = requiredItems && requiredItems.includes(schemaName);
-            return renderPropertyGridRow(schemaNode, schemaName, isRequired);
-        }
-
-        function renderStandardFormNode(schemaNode, schemaName, requiredItems) {
-            var nodeType = fixNU(schemaNode["type"], "string");
-            
-            if (nodeType === "object") {
-                return renderStandardFormObject(schemaNode, schemaName, requiredItems);
-            } else if (nodeType === "array") {
-                return renderStandardFormArray(schemaNode, schemaName);
-            } else {
-                return renderStandardFormSimple(schemaNode, schemaName, requiredItems);
-            }
-        }
-
-        function renderStandardFormObject(schemaNode, schemaName, requiredItems) {
-            var properties = schemaNode["properties"] ? Object.keys(schemaNode["properties"]) : [];
-            var containerHtml = '<fieldset class="j-standard-form-fieldset" data-value-name="' + (schemaName || '') + '">';
-            
-            if (schemaName) {
-                var title = fixNU(schemaNode["title"], schemaName);
-                containerHtml += '<legend>' + title + '</legend>';
-            }
-            
-            if (properties.length > 0) {
-                level++;
-                properties.forEach(function (item, index, arr) {
-                    var propSchema = schemaNode["properties"][item];
-                    containerHtml += renderStandardFormNode(propSchema, item, schemaNode["required"]);
-                });
-                level--;
-            }
-            
-            containerHtml += '</fieldset>';
-            return containerHtml;
-        }
-
-        function renderStandardFormArray(schemaNode, schemaName) {
-            var title = fixNU(schemaNode["title"], schemaName);
-            var templateId = schemaName + "_" + level + "_sf";
-            
-            var containerHtml = '<div class="j-standard-form-array" data-value-name="' + schemaName + '">';
-            containerHtml += '<h4>' + title + '</h4>';
-            containerHtml += '<div class="j-standard-form-array-controls">';
-            containerHtml += '<button type="button" class="j-add-array-item" data-template-id="' + templateId + '" data-array-loaded="false">افزودن آیتم</button>';
-            containerHtml += '</div>';
-            containerHtml += '<div class="j-standard-form-array-body"></div>';
-            containerHtml += '</div>';
-            
-            // Create array template
-            var arrType = getArrayType(schemaNode);
-            var itemSchema = { "type": arrType, "title": "آیتم" };
-            if (schemaNode["items"]) {
-                if (schemaNode["items"]["ui"]) itemSchema["ui"] = schemaNode["items"]["ui"];
-                if (schemaNode["items"]["enum"]) itemSchema["enum"] = schemaNode["items"]["enum"];
-                if (schemaNode["items"]["properties"]) itemSchema = schemaNode["items"];
-            }
-            
-            level++;
-            var itemTemplate;
-            // Handle $ref arrays
-            if (arrType.startsWith("#/")) {
-                var refPath = arrType.replace('#/', '').split('/');
-                var refSchema = options["schema"];
-                refPath.forEach(function(part) {
-                    refSchema = refSchema[part];
-                });
-                if (refSchema) {
-                    itemTemplate = renderStandardFormObject(refSchema, "", []);
-                } else {
-                    itemTemplate = '<div class="j-error">Reference not found: ' + arrType + '</div>';
-                }
-            } else if (arrType === "object" && schemaNode["items"] && schemaNode["items"]["properties"]) {
-                itemTemplate = renderStandardFormObject(schemaNode["items"], "", []);
-            } else {
-                itemTemplate = renderStandardFormSimple(itemSchema, "$index$", []);
-            }
-            level--;
-            
-            arrayTemplates[templateId] = {
-                htmlTemplate: '<div class="j-array-item-standard"><div class="j-array-item-header">آیتم $index$ <button class="j-remove-array-item" data-index="$index$">حذف</button></div>' + itemTemplate + '</div>',
-                dataTemplate: (arrType === "object" ? {} : "")
-            };
-            
-            return containerHtml;
-        }
-
-        function renderStandardFormSimple(schemaNode, schemaName, requiredItems) {
-            var isRequired = requiredItems && requiredItems.includes(schemaName);
-            var nodeType = fixNU(schemaNode["type"], "string");
-            var title = fixNU(schemaNode["title"], schemaName);
-            var requiredStar = isRequired ? '<span class="j-required-star">*</span>' : '';
-            
-            var inputHtml = generateSimpleInput(schemaNode, schemaName, isRequired);
-            
-            var inlineHint = getUISetting(schemaNode, "inlineHint", "");
-            if (inlineHint !== "") inlineHint = '<div class="j-inline-help">' + inlineHint + '</div>';
-            
-            return '<div class="j-standard-form-field">' +
-                   '<label class="j-standard-form-label">' + title + requiredStar + '</label>' +
-                   '<div class="j-standard-form-input">' + inputHtml + inlineHint + '</div>' +
-                   '</div>';
-        }
-
-        function generateSimpleInput(schemaNode, schemaName, isRequired) {
-            var nodeType = fixNU(schemaNode["type"], "string");
-            var requiredAtt = isRequired ? ' data-required="true" ' : '';
-            var dataValueNameAtt = ' data-value-name="' + schemaName + '" ';
-            var classAtt = ' class="j-input j-input-' + nodeType + '" ';
-            var disabledAttr = getUISetting(schemaNode, "disabled", false) === false ? "" : ` disabled="disabled" `;
-            var placeholderHint = getUISetting(schemaNode, "placeholderHint", "");
-            if (placeholderHint !== "") placeholderHint = ' placeholder="' + placeholderHint + '" ';
-            
-            var minAtt = "", maxAtt = "";
-            minAtt = fixNU(schemaNode["minLength"], "") + fixNU(schemaNode["minimum"], "");
-            maxAtt = fixNU(schemaNode["maxLength"], "") + fixNU(schemaNode["maximum"], "");
-            if (minAtt !== "") minAtt = ' data-min="' + minAtt + '" ';
-            if (maxAtt !== "") maxAtt = ' data-max="' + maxAtt + '" ';
-            
-            if (nodeType === "boolean") {
-                return '<input type="checkbox" ' + classAtt + dataValueNameAtt + requiredAtt + disabledAttr + ' />';
-            } else if (fixNU(schemaNode["enum"], "") !== "") {
-                var editor = getUISetting(schemaNode, "editor", "select");
-                if (editor === "radio") {
-                    var nameAtt = ' name="rdo_' + schemaName + '" ';
-                    var inputBody = "";
-                    
-                    if (!isRequired) {
-                        inputBody = '<label><input checked value="' + options["radioNullCaption"] + '" ' + classAtt + ' type="radio" ' + nameAtt + dataValueNameAtt + requiredAtt + ' /> null</label> ';
-                    }
-                    
-                    jQuery.each(schemaNode["enum"], function (index) {
-                        inputBody += '<label><input value="' + schemaNode["enum"][index] + '" type="radio" ' + classAtt + nameAtt + dataValueNameAtt + requiredAtt + disabledAttr + ' /> ' + schemaNode["enum"][index] + '</label> ';
-                    });
-                    
-                    return '<div ' + requiredAtt + ' data-is-valid="false">' + inputBody + '</div>';
-                } else {
-                    var inputBody = "";
-                    if (!isRequired) inputBody = '<option selected="true">' + options["selectNullCaption"] + '</option>';
-                    jQuery.each(schemaNode["enum"], function (index) {
-                        inputBody += '<option value="' + schemaNode["enum"][index] + '">' + schemaNode["enum"][index] + '</option>';
-                    });
-                    return '<select ' + classAtt + dataValueNameAtt + requiredAtt + disabledAttr + '>' + inputBody + "</select>";
-                }
-            } else {
-                var editor = getUISetting(schemaNode, "editor", "text");
-                if (nodeType === "date") editor = "date";
-                if (nodeType === "email") editor = "email";
-                if (nodeType === "tel") editor = "tel";
-                if (nodeType === "number" || nodeType === "integer") editor = "number";
-                
-                if (editor === "textarea") {
-                    return '<textarea rows="4" ' + classAtt + dataValueNameAtt + requiredAtt + minAtt + maxAtt + disabledAttr + '></textarea>';
-                } else if (editor === "html") {
-                    return '<input type="hidden" ' + classAtt + dataValueNameAtt + requiredAtt + minAtt + maxAtt + ' />' +
-                           '<div class="j-input-html-div" contenteditable></div>';
-                } else {
-                    return '<input type="' + editor + '" ' + classAtt + dataValueNameAtt + placeholderHint + requiredAtt + minAtt + maxAtt + disabledAttr + ' />';
-                }
-            }
-        }
+        // All PropertyGrid and StandardForm rendering functions removed - using only default current mode
 
 
     }

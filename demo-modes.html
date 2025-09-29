@@ -325,8 +325,6 @@
             jsonFormInstance = $("#jsonEditor").jsonToForm({
                 "schema": sampleSchema,
                 "value": sampleValue,
-                "renderMode": "current",
-                "showModeSelector": true,
                 "afterValueChanged": function (newValue, newSchema) {
                     updateOutput(newValue);
                 },
@@ -356,8 +354,8 @@
 <body>
     <div class="demo-container">
         <div class="demo-header">
-            <h1>JsonToForm - نمایش حالات مختلف رندر</h1>
-            <p>این فرم سه حالت رندر مختلف را پشتیبانی می‌کند: حالت فعلی، جدول ویژگی‌ها و فرم استاندارد</p>
+            <h1>JsonToForm - دموی فرم پیشرفته</h1>
+            <p>نمونه‌ای از فرم پیچیده با انواع مختلف فیلد و اعتبارسنجی</p>
         </div>
         
         <div class="demo-layout">
@@ -379,11 +377,10 @@
                 <div class="output-section">
                     <div class="output-title">راهنما:</div>
                     <div class="output-content" style="max-height: 150px; font-size: 11px;">
-• حالت فعلی: طراحی اصلی با ساختار درختی
-• جدول ویژگی‌ها: نمایش در قالب جدول مانند Property Grid
-• فرم استاندارد: طراحی فرم کلاسیک با fieldset ها
-
-از منوی بالای فرم می‌توانید بین حالات مختلف تغییر دهید.
+• JsonToForm با حالت پیش‌فرض
+• پشتیبانی از انواع مختلف فیلد
+• اعتبارسنجی خودکار
+• رابط کاربری ساده و قابل استفاده
                     </div>
                 </div>
             </div>

@@ -36,13 +36,7 @@
         <h1>تست حالات مختلف رندر JsonToForm</h1>
         
         <div class="controls">
-            <label>انتخاب حالت رندر:</label>
-            <select id="modeSelector">
-                <option value="current">حالت فعلی</option>
-                <option value="propertyGrid">جدول ویژگی‌ها</option>
-                <option value="standardForm">فرم استاندارد</option>
-            </select>
-            <button onclick="changeMode()">تغییر حالت</button>
+            <h3>تست فرم JsonToForm (حالت پیش‌فرض)</h3>
         </div>
         
         <div class="demo-content">
@@ -103,14 +97,12 @@
 
         var formInstance;
 
-        function initForm(mode) {
+        function initForm() {
             $("#jsonEditor").empty();
             
             formInstance = $("#jsonEditor").jsonToForm({
                 "schema": schema,
                 "value": value,
-                "renderMode": mode || "current",
-                "showModeSelector": false,
                 "afterValueChanged": function (newValue) {
                     $("#output").text(JSON.stringify(newValue, null, 2));
                 },
@@ -120,13 +112,8 @@
             });
         }
 
-        function changeMode() {
-            var selectedMode = $("#modeSelector").val();
-            initForm(selectedMode);
-        }
-
         $(document).ready(function() {
-            initForm("current");
+            initForm();
         });
     </script>
 </body>
