@@ -221,13 +221,18 @@ body {
     cursor: pointer;
     font-size: 12px;
     font-weight: bold;
-    margin-left: 8px;
+    margin: 0 4px;
     transition: all 0.2s ease;
 }
 
 .j-ec:hover {
     background: #495057;
     transform: scale(1.05);
+}
+
+/* ===== Collapsed State ===== */
+.j-collapsed {
+    display: none !important;
 }
 
 /* ===== Nested Containers - Indentation ===== */
@@ -249,6 +254,312 @@ body {
     border-radius: 5px;
     margin-bottom: 8px;
     background: white;
+}
+
+/* ===== Mode Selector ===== */
+.j-mode-selector {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.j-mode-selector label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #495057;
+    margin: 0;
+}
+
+.j-mode-select {
+    padding: 5px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background: white;
+    font-size: 13px;
+    min-width: 150px;
+}
+
+/* ===== Property Grid Mode ===== */
+.j-property-grid-container {
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.j-property-grid-header {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.j-property-grid-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.j-property-grid-table thead {
+    background: #e9ecef;
+}
+
+.j-property-grid-table th,
+.j-property-grid-table td {
+    padding: 8px 12px;
+    text-align: right;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: top;
+}
+
+.j-property-grid-table th {
+    font-weight: bold;
+    font-size: 13px;
+    color: #495057;
+}
+
+.j-property-name {
+    width: 30%;
+    font-weight: 500;
+    color: #333;
+}
+
+.j-property-value {
+    width: 60%;
+}
+
+.j-property-actions {
+    width: 10%;
+    text-align: center;
+}
+
+.j-property-grid-row:hover {
+    background: #f8f9fa;
+}
+
+.j-property-grid-array-container {
+    margin: 10px 0;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.j-property-grid-array-header {
+    background: #f1f3f4;
+    padding: 8px 12px;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.j-property-grid-array-body {
+    padding: 10px;
+}
+
+.j-array-item-grid {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.j-array-item-grid:last-child {
+    border-bottom: none;
+}
+
+/* ===== Standard Form Mode ===== */
+.j-standard-form-fieldset {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fafbfc;
+}
+
+.j-standard-form-fieldset legend {
+    font-weight: bold;
+    font-size: 16px;
+    color: #495057;
+    padding: 0 10px;
+    margin-bottom: 0;
+}
+
+.j-standard-form-field {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.j-standard-form-label {
+    font-weight: 500;
+    font-size: 14px;
+    color: #495057;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.j-standard-form-input {
+    width: 100%;
+}
+
+.j-standard-form-input input,
+.j-standard-form-input select,
+.j-standard-form-input textarea {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.j-standard-form-input input:focus,
+.j-standard-form-input select:focus,
+.j-standard-form-input textarea:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.j-standard-form-array {
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.j-standard-form-array h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #495057;
+}
+
+.j-standard-form-array-controls {
+    margin-bottom: 15px;
+}
+
+.j-standard-form-array-body {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.j-array-item-standard {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.j-array-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #495057;
+}
+
+/* ===== Nested Objects and Arrays Indicators ===== */
+.j-nested-object,
+.j-nested-array {
+    padding: 4px 8px;
+    background: #e9ecef;
+    border-radius: 3px;
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* ===== Enhanced Button Styles ===== */
+.j-standard-form-array-controls button,
+.j-property-grid-array-header button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.j-standard-form-array-controls button:hover,
+.j-property-grid-array-header button:hover {
+    background: #0056b3;
+}
+
+.j-array-item-header button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.j-array-item-header button:hover {
+    background: #c82333;
+}
+
+.j-array-item-grid button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.j-array-item-grid button:hover {
+    background: #c82333;
+}
+
+/* ===== Property Grid Empty State ===== */
+.j-property-grid-empty {
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin: 10px;
+}
+
+/* ===== Nested Property Grid Tables ===== */
+.j-property-grid-table .j-property-grid-container {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+}
+
+.j-property-grid-table .j-property-grid-table {
+    font-size: 11px;
+}
+
+.j-property-grid-table .j-property-grid-table th,
+.j-property-grid-table .j-property-grid-table td {
+    padding: 4px 8px;
+}
+
+/* ===== Standard Form Improvements ===== */
+.j-standard-form-fieldset {
+    position: relative;
+}
+
+.j-standard-form-fieldset fieldset {
+    margin-top: 10px;
 }
 
 .j-array-header {

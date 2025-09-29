@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JsonToForm - Test Render Modes</title>
+    <script src="/jquery/jquery.min.js"></script>
+    <script src="/jsonToForm/jsonToForm.js"></script>
+    <link href="/jsonToForm/jsonToForm.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            direction: rtl; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .controls { 
+            margin-bottom: 20px; 
+            padding: 10px; 
+            background: #f5f5f5; 
+            border-radius: 5px; 
+        }
+        .demo-content { 
+            background: white; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>تست حالات مختلف رندر JsonToForm</h1>
+        
+        <div class="controls">
+            <label>انتخاب حالت رندر:</label>
+            <select id="modeSelector">
+                <option value="current">حالت فعلی</option>
+                <option value="propertyGrid">جدول ویژگی‌ها</option>
+                <option value="standardForm">فرم استاندارد</option>
+            </select>
+            <button onclick="changeMode()">تغییر حالت</button>
+        </div>
+        
+        <div class="demo-content">
+            <div id="jsonEditor"></div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <h3>خروجی JSON:</h3>
+            <pre id="output" style="background: #f8f8f8; padding: 10px; border-radius: 3px;"></pre>
+        </div>
+    </div>
+
+    <script>
+        var schema = {
+            "title": "فرم تست",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "title": "نام",
+                    "type": "string"
+                },
+                "age": {
+                    "title": "سن",
+                    "type": "number"
+                },
+                "email": {
+                    "title": "ایمیل",
+                    "type": "email"
+                },
+                "active": {
+                    "title": "فعال",
+                    "type": "boolean"
+                },
+                "category": {
+                    "title": "دسته‌بندی",
+                    "type": "string",
+                    "enum": ["A", "B", "C"]
+                },
+                "tags": {
+                    "title": "برچسب‌ها",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": ["name", "email"]
+        };
+
+        var value = {
+            "name": "علی احمدی",
+            "age": 30,
+            "email": "ali@example.com", 
+            "active": true,
+            "category": "A",
+            "tags": ["برنامه‌نویس", "طراح"]
+        };
+
+        var formInstance;
+
+        function initForm(mode) {
+            $("#jsonEditor").empty();
+            
+            formInstance = $("#jsonEditor").jsonToForm({
+                "schema": schema,
+                "value": value,
+                "renderMode": mode || "current",
+                "showModeSelector": false,
+                "afterValueChanged": function (newValue) {
+                    $("#output").text(JSON.stringify(newValue, null, 2));
+                },
+                "afterWidgetCreated": function (newValue) {
+                    $("#output").text(JSON.stringify(newValue, null, 2));
+                }
+            });
+        }
+
+        function changeMode() {
+            var selectedMode = $("#modeSelector").val();
+            initForm(selectedMode);
+        }
+
+        $(document).ready(function() {
+            initForm("current");
+        });
+    </script>
+</body>
+</html>

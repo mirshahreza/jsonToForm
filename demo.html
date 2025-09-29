@@ -199,6 +199,8 @@
             je = $("#jsonEditor").jsonToForm({
                 "schema": s,
                 "value": v,
+                "renderMode": "current",
+                "showModeSelector": true,
                 "afterValueChanged": function (newValue, newSchema) {
                     $("#jsonValue").html(JSON.stringify(newValue, null, 2));
                     setValidity();
