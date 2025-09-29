@@ -1,93 +1,119 @@
+<div align="center">
+
 # JsonToForm v2.0 🚀
 
-A modern, powerful jQuery plugin for converting JSON schemas to beautiful HTML forms with real-time validation and advanced features.
+Modern jQuery plugin that turns JSON Schema-like definitions into beautiful, responsive HTML forms with real-time validation.
 
-![JsonToForm Banner](https://img.shields.io/badge/JsonToForm-v2.0-blue?style=for-the-badge) ![jQuery](https://img.shields.io/badge/jQuery-3.x+-yellow?style=for-the-badge) ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![jQuery](https://img.shields.io/badge/jQuery-3.x+-blue.svg)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Definitions-blue.svg)](jsonToForm/jsonToForm.d.ts)
 
-## ✨ Features
+[Live Demo](demo-v2.html)
 
-- 🎨 Modern Design: Clean, responsive UI with CSS Grid/Flexbox
-- 🔄 Real-time Validation: Instant feedback as users type
-- 🌍 Internationalization: Full RTL support (Persian, Arabic, Hebrew)
-- 📱 Mobile-First: Responsive design for all screen sizes
-- 🎯 TypeScript Support: Full type definitions included
-- 🧩 Modular Architecture: Clean, maintainable ES6+ code
-- 🧪 Custom Controls: Rich input types and validation rules
-- 🔧 Easy Theming: CSS custom properties for easy customization
+</div>
+
+## ✨ Highlights
+
+- 🎨 Modern UI: clean, responsive (Flexbox/Grid), light/dark ready
+- � Real-time validation: instant feedback with friendly hints
+- 🌍 i18n & RTL: Persian/Farsi and other RTL languages supported
+- 🧩 Rich inputs: string, number, email, tel, url, date, time, textarea, select, checkbox, radio, color, html, object, array
+- � Modular code: Renderer, Validator, EventHandler, Utils
+- �️ TypeScript: bundled `.d.ts` for great IntelliSense
 
 ## 🚀 Quick Start
 
-### HTML
+Include jQuery, the compiled plugin, and one of the themes:
+
+```html
 <!DOCTYPE html>
 <html>
-<head>
-	<script src="jquery/jquery.min.js"></script>
-	<script src="jsonToForm/jsonToForm.v2.js"></script>
-	<link href="src/styles/jsonToForm.clean.css" rel="stylesheet" />
-	<!-- Or: <link href="src/styles/jsonToForm.modern.css" rel="stylesheet" /> -->
-	<!-- RTL? Add dir="rtl" to body or container. -->
-  </head>
-<body>
-	<div id="myForm"></div>
+	<head>
+		<meta charset="utf-8" />
+		<script src="jquery/jquery.min.js"></script>
+		<script src="jsonToForm/jsonToForm.v2.js"></script>
+		<link href="src/styles/jsonToForm.clean.css" rel="stylesheet" />
+		<!-- Or: <link href="src/styles/jsonToForm.modern.css" rel="stylesheet" /> -->
+	</head>
+	<body>
+		<div id="myForm"></div>
+		<script>
+			$("#myForm").jsonToForm({
+				schema: {
+					type: "object",
+					properties: {
+						name: { type: "string", title: "Full Name", minLength: 2, required: true },
+						email: { type: "email", title: "Email Address", required: true },
+						age: { type: "number", title: "Age", min: 18, max: 100 }
+					},
+					required: ["name", "email"]
+				}
+			});
+
+			// Read & validate
+			const data = $("#myForm").jsonToForm("getValue");
+			const isValid = $("#myForm").jsonToForm("isValid");
+			console.log({ data, isValid });
+		</script>
+	</body>
+	</html>
+```
+
+## � API (essentials)
+
+- `getValue()` → returns the current form value
+- `setValue(obj)` → sets/replaces form value
+- `isValid()` → boolean validity of the whole form
+- `validator.getAllErrors()` → list of validation errors
+
+Example:
+
+```js
+const form = $("#myForm").jsonToForm(options);
+form.setValue({ name: "John Doe" });
+console.log(form.getValue(), form.isValid());
+console.log(form.validator.getAllErrors());
+```
+
+## 🎨 Theming & RTL
+
+- Themes: `src/styles/jsonToForm.clean.css` (simple), `src/styles/jsonToForm.modern.css` (polished)
+- Dark mode: set `data-json-form-theme="dark"` on `<body>`
+- RTL: add `dir="rtl"` on `<html>`/`<body>`/container
+
+```html
+<body dir="rtl" data-json-form-theme="dark">
+	<!-- your form container -->
 </body>
-</html>
+```
 
-### JavaScript
-// Simple form
-$('#myForm').jsonToForm({
-	schema: {
-		"name": {
-			"type": "string",
-			"title": "Full Name",
-			"required": true,
-			"minLength": 2
-		},
-		"email": {
-			"type": "email",
-			"title": "Email Address",
-			"required": true
-		},
-		"age": {
-			"type": "number",
-			"title": "Age",
-			"min": 18,
-			"max": 100
-		}
-	}
-});
+## � Project Structure
 
-// Get form data
-const data = $('#myForm').jsonToForm('getValue');
-console.log(data);
+- `src/` → modular source (core, renderer, validator, events, utils, styles)
+- `jsonToForm/jsonToForm.v2.js` → compiled v2 bundle
+- `jsonToForm/jsonToForm.d.ts` → TypeScript definitions
+- `v1/` → legacy v1 plugin, styles, and demos
+- `demo-v2.html` → v2 demo
 
-// Validate form
-const isValid = $('#myForm').jsonToForm('isValid');
-console.log('Form is valid:', isValid);
+## 🔁 Migrating from v1.x
 
-## 🧾 Supported Input Types
+Old usage (v1.x):
 
-string, number, email, tel, url, date, time, textarea, select, checkbox, radio, color, html, object, array
+```js
+$('#myForm').jsonToForm({ schema, value });
+```
 
-## 🎨 Styling & Themes
+New usage (v2):
 
-- Clean theme: src/styles/jsonToForm.clean.css
-- Modern theme: src/styles/jsonToForm.modern.css
+```js
+$('#myForm').jsonToForm({ schema });
+$('#myForm').jsonToForm('setValue', value);
+```
 
-## 🌍 Internationalization
+For legacy plugin and original demos, see the `v1/` folder.
 
-See demo-v2.html for a comprehensive example.
+## 📝 License
 
-## 🧩 Project Structure
-
-- src/ … modular core (renderer, validator, events, utils, styles)
-- jsonToForm/jsonToForm.v2.js … compiled v2 bundle
-- v1/ … legacy v1 plugin and demos
-
-## 🔁 Migration from v1.x
-
-Old: $('#myForm').jsonToForm({ schema, value })
-New: $('#myForm').jsonToForm({ schema }); $('#myForm').jsonToForm('setValue', value);
-
-For the legacy version and original demos, see the v1/ folder.
+MIT © Contributors — see [LICENSE](LICENSE)
 
 
