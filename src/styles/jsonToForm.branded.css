@@ -120,9 +120,9 @@ button.j-remove-array-item,
     width: 24px !important;
     height: 24px !important;
     padding: 0 !important;
-    margin: 0 1px !important;
+    margin: 0 3px !important;
     border: none !important;
-    border-radius: 4px !important;
+    border-radius: 50% !important;
     cursor: pointer !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     font-size: 12px !important;

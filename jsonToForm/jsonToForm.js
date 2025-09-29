@@ -1,11 +1,59 @@
 (function ($) {
+    console.log("🔥 JsonToForm script loaded");
+    
     $.fn.jsonToForm = function (options) {
+        console.log("🚀 JsonToForm plugin initialized");
 
         var renderPlace = this;
         var level = 0;
         var arrayTemplates = {};
         initOptions();
         initWidget();
+
+        // Global function for direct removal
+        window.removeArrayItemDirect = function(button) {
+            console.log("🗑️ Direct removal function called", button);
+            
+            var $button = $(button);
+            var itemIndex = $button.attr("data-index");
+            console.log("Button index:", itemIndex);
+            
+            // Find the container to remove
+            var $arrayItem = $button.closest(".j-array-item");
+            if ($arrayItem.length === 0) {
+                $arrayItem = $button.closest(".j-container");
+            }
+            console.log("Container to remove:", $arrayItem);
+            
+            if ($arrayItem.length > 0) {
+                // Find array container
+                var $arrayContainer = $arrayItem.closest(".j-array-container");
+                console.log("Array container:", $arrayContainer);
+                
+                if ($arrayContainer.length > 0) {
+                    var dataPath = $arrayContainer.attr("data-path");
+                    if (!dataPath) {
+                        dataPath = generatePath($arrayContainer);
+                    }
+                    console.log("Data path:", dataPath);
+                    
+                    try {
+                        // Remove from data
+                        eval('options["value"]' + dataPath + '.splice(' + itemIndex + ',1);');
+                        
+                        // Remove from DOM
+                        $arrayItem.remove();
+                        
+                        // Refresh
+                        setValue(options["value"]);
+                        
+                        console.log("✅ Item removed successfully!");
+                    } catch (error) {
+                        console.error("❌ Error:", error);
+                    }
+                }
+            }
+        };
 
         var output = {
             "isValid": function () { return isValid(); },
@@ -33,6 +81,7 @@
         }
 
         function initWidget() {
+            console.log("🏗️ InitWidget called");
             level = 0;
             arrayTemplates = {};
             var widgetContent = "";
@@ -43,6 +92,7 @@
             }
             
             widgetContent += renderSchemaNode(options["schema"], "");
+            console.log("📄 Generated HTML content:", widgetContent);
             renderPlace.html(widgetContent);
             initValuePathes();
             setValue(options["value"]);
@@ -119,9 +169,16 @@
         }
 
         function initEvents() {
-            renderPlace.find(".j-ec").off("click").on("click", function () { toggleSubTree(this); });
-            renderPlace.find(".j-add-array-item").off("click").on("click", function () { addArrayItem($(this), true, null); });
-            renderPlace.find(".j-remove-array-item").off("click").on("click", function () { removeArrayItem($(this)); });
+            console.log("InitEvents called - setting up event delegation");
+            // Use event delegation for dynamic elements
+            renderPlace.off("click", ".j-ec").on("click", ".j-ec", function () { toggleSubTree(this); });
+            renderPlace.off("click", ".j-add-array-item").on("click", ".j-add-array-item", function () { addArrayItem($(this), true, null); });
+            renderPlace.off("click", ".j-remove-array-item").on("click", ".j-remove-array-item", function () { 
+                console.log("Remove button clicked - event delegated correctly");
+                removeArrayItem($(this)); 
+            });
+            
+            // Direct binding for input events
             renderPlace.find(".j-input-text,.j-input-textarea,.j-input-date,.j-input-number,.j-input-email,.j-input-tel").off("keyup").on("keyup", function () { valueChanged($(this)) });
             renderPlace.find(".j-input-checkbox,.j-input-radio,.j-input-select,.j-input-color,.j-input-date,.j-input-number,.j-input-html").off("change").on("change", function () { valueChanged($(this)) });
             renderPlace.find(".j-input-html-div").off("keyup").on("keyup", function () { changeInput($(this)) });
@@ -140,34 +197,66 @@
         }
 
         function removeArrayItem(arrItem) {
-            var itemIndex = arrItem.attr("data-index");
-            var nodeToRemove, arrayContainer, dataPath;
+            console.log("Remove button clicked, button element:", arrItem[0]);
+            console.log("Button data-index:", arrItem.attr("data-index"));
+            console.log("Button parent elements:", arrItem.parents());
             
-            // Handle different render modes
-            if (options["renderMode"] === "propertyGrid") {
-                nodeToRemove = arrItem.closest(".j-array-item-grid");
-                arrayContainer = arrItem.closest(".j-property-grid-array-container");
-            } else if (options["renderMode"] === "standardForm") {
-                nodeToRemove = arrItem.closest(".j-array-item-standard");
-                arrayContainer = arrItem.closest(".j-standard-form-array");
-            } else {
-                nodeToRemove = arrItem.closest(".j-array-item");
-                arrayContainer = arrItem.closest(".j-array-container");
+            // Find the array item container (should be immediate parent or close ancestor)
+            var nodeToRemove = arrItem.closest(".j-array-item");
+            console.log("Found j-array-item:", nodeToRemove);
+            
+            if (nodeToRemove.length === 0) {
+                // Fallback: try to find by going up the DOM
+                nodeToRemove = arrItem.parent().closest(".j-container");
+                console.log("Fallback - found container:", nodeToRemove);
             }
             
-            if (!arrayContainer.length) {
+            if (nodeToRemove.length === 0) {
+                console.error("Could not find any container to remove");
                 return;
             }
             
-            dataPath = arrayContainer.attr("data-path");
+            // Find the array container
+            var arrayContainer = nodeToRemove.closest(".j-array-container");
+            console.log("Array container:", arrayContainer);
+            
+            if (arrayContainer.length === 0) {
+                console.error("Could not find array container");
+                return;
+            }
+            
+            // Get the index from the button
+            var itemIndex = arrItem.attr("data-index");
+            if (!itemIndex && itemIndex !== 0) {
+                console.error("No data-index found on button");
+                return;
+            }
+            
+            // Get data path
+            var dataPath = arrayContainer.attr("data-path");
             if (!dataPath) {
                 dataPath = generatePath(arrayContainer);
             }
+            console.log("Data path:", dataPath, "Index:", itemIndex);
             
-            eval('options["value"]' + dataPath + '.splice(' + itemIndex + ',1);');
-            nodeToRemove.remove();
-            setValue(options["value"]);
-            if (options["afterValueChanged"]) options["afterValueChanged"](options["value"], options["schema"]);
+            try {
+                // Remove from data
+                eval('options["value"]' + dataPath + '.splice(' + itemIndex + ',1);');
+                
+                // Remove from DOM
+                nodeToRemove.remove();
+                
+                // Refresh the form
+                setValue(options["value"]);
+                
+                if (options["afterValueChanged"]) {
+                    options["afterValueChanged"](options["value"], options["schema"]);
+                }
+                
+                console.log("✅ Array item removed successfully!");
+            } catch (error) {
+                console.error("❌ Error removing array item:", error);
+            }
         }
 
         function addArrayItem(arrayContainer, needInitiations, itemIndex) {
@@ -213,12 +302,17 @@
                 itemIndex = arrLen - 1;
             }
 
+            console.log("Before replacement - HTML template:", htmlTemplate);
             htmlTemplate = replaceAll(htmlTemplate, "$index$", itemIndex);
+            console.log("After replacement - HTML template:", htmlTemplate);
+            console.log("Adding to arrayBody:", arrayBody);
             arrayBody.append(htmlTemplate);
+            console.log("DOM after append:", arrayBody.html());
 
             if (needInitiations) {
                 initValuePathes();
                 initEvents();
+                console.log("Events re-initialized for new array item");
             }
         }
 
@@ -337,11 +431,22 @@
             // اضافه کردن ستون action برای array items
             let actionContent = "";
             if (schemaName === "$index$") {
-                actionContent = '<span class="j-remove-array-item" data-index="$index$" title="حذف این آیتم">×</span>';
+                actionContent = '<button class="j-remove-array-item" data-index="$index$" onclick="window.testRemove(this);" title="حذف این آیتم"></button>';
             }
             ActionT = ActionT.replace("$$$", actionContent);
             
-            return ContainerT.replace("$$$", TitleT + BodyT + ActionT).replace("$hover-hint$", hoverHint);
+            var result = ContainerT.replace("$$$", TitleT + BodyT + ActionT).replace("$hover-hint$", hoverHint);
+            if (schemaName === "$index$") {
+                console.log("🏗️ Rendering array item:", {
+                    schemaName: schemaName,
+                    ContainerT: ContainerT,
+                    TitleT: TitleT,
+                    BodyT: BodyT,
+                    ActionT: ActionT,
+                    result: result
+                });
+            }
+            return result;
         }
 
         function renderObjectNode(schemaNode, schemaName) {
@@ -375,7 +480,7 @@
             if (inlineHint != "") inlineHint = '<div class="j-inline-help">' + inlineHint + '</div>';
             
             var TitleT = '<div class="j-array-header">' + getSpacer(level) + getEC(ecBtn) + getTitle(schemaNode, schemaName) + 
-                         '<span class="j-add-array-item" data-array-loaded="false" data-template-id="' + itemTemplateId + '" title="افزودن آیتم جدید">+</span>' + 
+                         '<button class="j-add-array-item" data-array-loaded="false" data-template-id="' + itemTemplateId + '" title="افزودن آیتم جدید">+</button>' + 
                          inlineHint + '</div>';
             var BodyT = '<div class="j-array-body ' + childClass + '">$$$</div>';
 
@@ -388,21 +493,24 @@
                 if (schemaNode["items"] && schemaNode["items"]["ui"]) arrSchema["ui"] = schemaNode["items"]["ui"];
                 if (schemaNode["items"] && schemaNode["items"]["enum"]) arrSchema["enum"] = schemaNode["items"]["enum"];
                 arrSchema["title"] = arrSchema["title"] + ' [$index$]';
-                itemContainerT = renderSimpleNode(arrSchema, "$index$");
+                var simpleNodeHtml = renderSimpleNode(arrSchema, "$index$");
+                console.log("Simple node HTML:", simpleNodeHtml);
+                itemContainerT = '<div class="j-array-item" data-index="$index$">' + simpleNodeHtml + '</div>';
+                console.log("Item container template:", itemContainerT);
                 itemDataTemplate = "";
             } else if (arrType == "object") {
                 // Handle object arrays
                 if (schemaNode["items"]) {
                     arrSchema = JSON.parse(JSON.stringify(schemaNode["items"]));
                     arrSchema["title"] = fixNU(arrSchema["title"], "") + ' [$index$]';
-                    itemContainerT = renderSchemaNode(arrSchema, "$index$");
+                    itemContainerT = '<div class="j-array-item" data-index="$index$">' + renderSchemaNode(arrSchema, "$index$") + '</div>';
                     itemDataTemplate = {};
                 }
             } else if (arrType.startsWith("#")) {
                 var r = "['" + replaceAll(arrType.replace('#/', ""), '/', "']['") + "']";
                 arrSchema = JSON.parse(JSON.stringify(V(options["schema"], r)));
                 arrSchema["title"] = fixNU(arrSchema["title"], "") + ' [$index$]';
-                itemContainerT = renderSchemaNode(arrSchema, "$index$");
+                itemContainerT = '<div class="j-array-item" data-index="$index$">' + renderSchemaNode(arrSchema, "$index$") + '</div>';
                 itemDataTemplate = {};
             }
             level--;

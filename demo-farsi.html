@@ -11,7 +11,7 @@
     <!-- JsonToForm Original -->
     <script src="jsonToForm/jsonToForm.js"></script>
     <link href="jsonToForm/jsonToForm.css" rel="stylesheet" type="text/css" />
-    <link href="src/styles/jsonToForm.telerik.css" rel="stylesheet" type="text/css" />
+    <link href="src/styles/jsonToForm.branded.css" rel="stylesheet" type="text/css" />
     
     <style>
         body {
@@ -404,7 +404,7 @@
             min-width: 100px !important;
         }
         
-        /* Input Controls - Modern Telerik Style */
+        /* Input Controls - Modern JsonToForm Style */
         .j-input-text,
         .j-input-select,
         .j-input-textarea,
@@ -432,7 +432,7 @@
             padding: 6px !important;
         }
         
-        /* Focus States - Telerik Blue */
+        /* Focus States - JsonToForm Blue */
         .j-input-text:focus,
         .j-input-select:focus,
         .j-input-textarea:focus,
@@ -502,7 +502,7 @@
             border-radius: 3px !important;
             cursor: pointer !important;
             transition: all 0.25s ease !important;
-            margin: 0 2px !important;
+            margin: 0 3px !important;
             text-decoration: none !important;
             vertical-align: middle !important;
             box-sizing: border-box !important;
@@ -673,6 +673,81 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        /* اصلاح آیکون‌های اضافه و حذف - مربعی مثل قبل */
+        .j-add-array-item,
+        .j-remove-array-item {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 24px !important;
+            height: 24px !important;
+            padding: 0 !important;
+            margin: 0 3px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            font-size: 0 !important;
+            font-weight: 500 !important;
+            line-height: 1 !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: relative !important;
+            text-indent: -9999px !important;
+            overflow: hidden !important;
+        }
+        
+        /* دکمه اضافه - سبز با آیکون + */
+        .j-add-array-item {
+            background: #10b981 !important;
+            color: white !important;
+        }
+        
+        .j-add-array-item::before {
+            content: "+" !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            text-indent: 0 !important;
+            position: absolute !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
+        
+        .j-add-array-item:hover {
+            background: #059669 !important;
+            transform: scale(1.1) !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+        }
+        
+        /* دکمه حذف - قرمز با آیکون × */
+        .j-remove-array-item {
+            background: #ef4444 !important;
+            color: white !important;
+        }
+        
+        .j-remove-array-item::before {
+            content: "×" !important;
+            font-size: 16px !important;
+            font-weight: 300 !important;
+            line-height: 1 !important;
+            text-indent: 0 !important;
+            position: absolute !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
+        
+        .j-remove-array-item:hover {
+            background: #dc2626 !important;
+            transform: scale(1.1) !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
+        }
+        
+        .j-add-array-item:active,
+        .j-remove-array-item:active {
+            transform: scale(0.9) !important;
         }
     </style>
 </head>
@@ -1040,6 +1115,9 @@
                         afterWidgetCreated: updateOutput
                     });
                     
+                    // Global access برای تابع حذف
+                    window.formInstance = formInstance;
+                    
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('jsonEditor').style.display = 'block';
                     
@@ -1159,40 +1237,60 @@
             }, 3000);
         }
 
-        // پاک کردن محتوای اضافی دکمه‌ها
-        function cleanButtonContent() {
-            // حذف محتوای اصلی دکمه‌ها و تنها نگهداری آیکون CSS
-            $('.j-add-array-item, .j-remove-array-item').each(function() {
-                const $btn = $(this);
-                // حفظ attributes و events اما پاک کردن text content
-                $btn.contents().filter(function() {
-                    return this.nodeType === 3; // Text nodes
-                }).remove();
-            });
-        }
-
-        // حذف شد - دکمه‌ها حالا در ساختار HTML قرار دارند
-
+        // تابع حذف آیتم آرایه
+        window.testRemove = function(btn) {
+            var $btn = $(btn);
+            var itemIndex = parseInt($btn.attr('data-index'));
+            var $container = $btn.closest('.j-array-item') || $btn.closest('.j-container');
+            var $arrayContainer = $container.closest('.j-array-container');
+            
+            console.log("Removing item:", itemIndex, $container);
+            
+            if ($arrayContainer.length > 0) {
+                // پیدا کردن path داده
+                var dataPath = $arrayContainer.attr('data-path');
+                if (!dataPath) {
+                    var valueName = $arrayContainer.attr('data-value-name');
+                    if (valueName) {
+                        dataPath = "['" + valueName + "']";
+                    }
+                }
+                
+                console.log("Data path:", dataPath);
+                
+                if (dataPath && window.formInstance) {
+                    try {
+                        // دریافت داده فعلی
+                        var currentValue = window.formInstance.getValue();
+                        
+                        // حذف آیتم از آرایه
+                        var arrayData = eval('currentValue' + dataPath);
+                        if (Array.isArray(arrayData) && itemIndex >= 0 && itemIndex < arrayData.length) {
+                            arrayData.splice(itemIndex, 1);
+                            
+                            // تنظیم مقدار جدید
+                            window.formInstance.setValue(currentValue);
+                            console.log("✅ Item removed successfully!");
+                        }
+                    } catch (error) {
+                        console.error("❌ Error removing item:", error);
+                        // fallback: فقط از DOM حذف کن
+                        $container.fadeOut(200, function() {
+                            $(this).remove();
+                        });
+                    }
+                } else {
+                    // fallback: فقط از DOM حذف کن
+                    $container.fadeOut(200, function() {
+                        $(this).remove();
+                    });
+                }
+            }
+        };
+        
         // بارگذاری اولیه
         $(document).ready(function() {
             loadPersonalData();
-            
-            // پاک کردن محتوای دکمه‌ها بعد از لود
-            setTimeout(cleanButtonContent, 1000);
-            
-            // نظارت بر تغییرات DOM برای دکمه‌های جدید
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'childList') {
-                        cleanButtonContent();
-                    }
-                });
-            });
-            
-            observer.observe(document.getElementById('jsonEditor'), {
-                childList: true,
-                subtree: true
-            });
         });
     </script>
 </body>
