@@ -54,7 +54,6 @@
         expandingLevel: -1,
         value: {},
         schema: {},
-        renderFirstLevel: false,
         autoTrimValues: true,
         indenting: 5,
         radioNullCaption: 'null',

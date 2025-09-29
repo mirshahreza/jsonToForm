@@ -151,8 +151,8 @@ class JsonFormUtils {
     }
     
     generateSpacer(level) {
-        const adjustedLevel = level + (this.jsonToForm.config.renderFirstLevel ? 0 : -1);
-        const spaceCount = Math.max(0, adjustedLevel * this.jsonToForm.config.indenting);
+    const adjustedLevel = Math.max(0, level - 1);
+    const spaceCount = adjustedLevel * this.jsonToForm.config.indenting;
         const spaces = '&nbsp;'.repeat(spaceCount);
         
         return `<span class="j-spacer">${spaces}</span>`;
@@ -873,7 +873,6 @@ class JsonToForm {
             expandingLevel: -1,
             value: {},
             schema: {},
-            renderFirstLevel: false,
             autoTrimValues: true,
             indenting: 5,
             radioNullCaption: 'null',
@@ -1049,8 +1048,7 @@ class JsonToForm {
     $.fn.jsonToForm.defaults = {
         expandingLevel: -1,
         value: {},
-        schema: {},
-        renderFirstLevel: false,
+    schema: {},
         autoTrimValues: true,
         indenting: 5,
         radioNullCaption: 'null',

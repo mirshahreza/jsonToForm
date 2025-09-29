@@ -232,8 +232,8 @@ class JsonFormUtils {
      * @returns {string} Spacer HTML
      */
     generateSpacer(level) {
-        const adjustedLevel = level + (this.jsonToForm.config.renderFirstLevel ? 0 : -1);
-        const spaceCount = Math.max(0, adjustedLevel * this.jsonToForm.config.indenting);
+    const adjustedLevel = Math.max(0, level - 1);
+    const spaceCount = adjustedLevel * this.jsonToForm.config.indenting;
         const spaces = '&nbsp;'.repeat(spaceCount);
         
         return `<span class="j-spacer">${spaces}</span>`;

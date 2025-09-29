@@ -110,7 +110,7 @@ class JsonFormRenderer {
         const properties = schemaNode.properties || {};
         const required = schemaNode.required || [];
         
-        const shouldShowHeader = this.jsonToForm.config.renderFirstLevel || this.jsonToForm.level > 0;
+    const shouldShowHeader = this.jsonToForm.level > 0;
         const isCollapsed = this.jsonToForm.config.expandingLevel !== -1 && 
                            this.jsonToForm.level + 1 > this.jsonToForm.config.expandingLevel;
         

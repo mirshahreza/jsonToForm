@@ -13,6 +13,8 @@ class JsonToForm {
      */
     constructor(element, options = {}) {
         this.element = element;
+        // Initialize utils first so config merging can use it if needed
+        this.utils = new JsonFormUtils(this);
         this.config = this._initializeConfig(options);
         this.level = 0;
         this.arrayTemplates = {};
@@ -21,7 +23,6 @@ class JsonToForm {
         this.renderer = new JsonFormRenderer(this);
         this.validator = new JsonFormValidator(this);
         this.eventHandler = new JsonFormEventHandler(this);
-        this.utils = new JsonFormUtils(this);
         
         this._initialize();
     }
@@ -35,7 +36,6 @@ class JsonToForm {
             expandingLevel: -1, // -1: expand all levels
             value: {},
             schema: {},
-            renderFirstLevel: false,
             autoTrimValues: true,
             indenting: 5,
             radioNullCaption: 'null',
