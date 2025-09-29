@@ -1,59 +1,93 @@
-**Why jsonToForm**
- - Fast and easy to use.
- - RTL support : just add style (direction:rtl) to the place holder element.
- - It just depends on jQuery.
- - It can be use in tow mode : property grid(currently implemented) / normal form(road map).
- - Easy to customize css.
- - Supported inputs : text/checkbox/textarea/html/color/date/number/radio/select.
- - Validation support.
- - Additional text option for describing inputs.
- - Based on schema standard.
+# JsonToForm v2.0 🚀
 
-**How to use**
-- A demo.html is included that describe the usage.
+A modern, powerful jQuery plugin for converting JSON schemas to beautiful HTML forms with real-time validation and advanced features.
 
-**Options**
-- schema / default : {} / a json schema  
-- value / default : {} / a json object  
-- expandingLevel / default : -1 / tree levels that initially is expanded. by default all levels will be expanded 
-- renderFirstLevel / default : false / indicates root element renders as a visual container or no
-- autoTrimValues / default : true / trims spaces automatically
-- indenting / default : 5 / number of spaces for each level of tree
-- treeExpandCollapseButton / default : true / show buttons to expand/collapse tree nodes 
-- selectNullCaption / default : '' / caption for select elements when is null
-- selectNullCaption / default : 'null' / caption for radio elements when is null 
+![JsonToForm Banner](https://img.shields.io/badge/JsonToForm-v2.0-blue?style=for-the-badge) ![jQuery](https://img.shields.io/badge/jQuery-3.x+-yellow?style=for-the-badge) ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-**Events**
-- afterValueChanged  
-- afterWidgetCreated
+## ✨ Features
 
-**Methods**
-- isValid()  
-- getSchema()
-- getValue()
-- setValue(value)
+- 🎨 Modern Design: Clean, responsive UI with CSS Grid/Flexbox
+- 🔄 Real-time Validation: Instant feedback as users type
+- 🌍 Internationalization: Full RTL support (Persian, Arabic, Hebrew)
+- 📱 Mobile-First: Responsive design for all screen sizes
+- 🎯 TypeScript Support: Full type definitions included
+- 🧩 Modular Architecture: Clean, maintainable ES6+ code
+- 🧪 Custom Controls: Rich input types and validation rules
+- 🔧 Easy Theming: CSS custom properties for easy customization
 
-**Next step V1.1.1**
-- Defaults for schema / reset to default button
-- Validation by regular based on schema standards
-- Validation for array items based on schema standards
+## 🚀 Quick Start
 
-**Road map**
-- Checkbox list (when node is simple array)
-- Including some important schemas like schema(for design another schema) / css 
-- Including some important regulars like email/website/...
-- Layout option for switching between property grid mode and normal form
-- Auto complete source for inputs by connecting to other API
-- Additional item for object nodes
+### HTML
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="jsonToForm/jsonToForm.v2.js"></script>
+	<link href="src/styles/jsonToForm.clean.css" rel="stylesheet" />
+	<!-- Or: <link href="src/styles/jsonToForm.modern.css" rel="stylesheet" /> -->
+	<!-- RTL? Add dir="rtl" to body or container. -->
+  </head>
+<body>
+	<div id="myForm"></div>
+</body>
+</html>
+
+### JavaScript
+// Simple form
+$('#myForm').jsonToForm({
+	schema: {
+		"name": {
+			"type": "string",
+			"title": "Full Name",
+			"required": true,
+			"minLength": 2
+		},
+		"email": {
+			"type": "email",
+			"title": "Email Address",
+			"required": true
+		},
+		"age": {
+			"type": "number",
+			"title": "Age",
+			"min": 18,
+			"max": 100
+		}
+	}
+});
+
+// Get form data
+const data = $('#myForm').jsonToForm('getValue');
+console.log(data);
+
+// Validate form
+const isValid = $('#myForm').jsonToForm('isValid');
+console.log('Form is valid:', isValid);
+
+## 🧾 Supported Input Types
+
+string, number, email, tel, url, date, time, textarea, select, checkbox, radio, color, html, object, array
+
+## 🎨 Styling & Themes
+
+- Clean theme: src/styles/jsonToForm.clean.css
+- Modern theme: src/styles/jsonToForm.modern.css
+
+## 🌍 Internationalization
+
+See demo-v2.html for a comprehensive example.
+
+## 🧩 Project Structure
+
+- src/ … modular core (renderer, validator, events, utils, styles)
+- jsonToForm/jsonToForm.v2.js … compiled v2 bundle
+- v1/ … legacy v1 plugin and demos
+
+## 🔁 Migration from v1.x
+
+Old: $('#myForm').jsonToForm({ schema, value })
+New: $('#myForm').jsonToForm({ schema }); $('#myForm').jsonToForm('setValue', value);
+
+For the legacy version and original demos, see the v1/ folder.
 
 
-**Similar projects**
- - https://github.com/jsonform/jsonform 
- - https://jsonforms.io/
- - https://github.com/jdorn/json-editor
- - https://github.com/plantain-00/schema-based-json-editor
- - https://github.com/codecombat/treema
- - https://json-schema-editor.tangramjs.com/
- - https://github.com/yourtion/vue-json-ui-editor
- 
- 

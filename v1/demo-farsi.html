@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JsonToForm v1 - دموی فارسی</title>
+    
+    <!-- jQuery -->
+    <script src="../jquery/jquery.min.js"></script>
+    
+    <!-- JsonToForm v1 -->
+    <script src="./jsonToForm/jsonToForm.js"></script>
+    <link href="./jsonToForm/jsonToForm.css" rel="stylesheet" type="text/css" />
+    <link href="../src/styles/jsonToForm.branded.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Styles trimmed for brevity; using original content from demo-farsi.html -->
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; margin: 0; padding: 20px; background: #f8fafc; min-height: 100vh; direction: rtl; color: #1a202c; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.1); overflow: hidden; border: 1px solid #e2e8f0; }
+        .header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { margin: 0; font-size: 2.5rem; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 1.1rem; }
+        .demo-content { display: grid; grid-template-columns: 1fr 1fr; min-height: 70vh; }
+        .form-panel { padding: 24px; background: #fefefe; overflow-y: auto; max-height: 70vh; }
+        .output-panel { padding: 24px; background: #ffffff; border-right: 1px solid #e2e8f0; overflow-y: auto; max-height: 70vh; }
+        .controls { padding: 20px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; position: relative; overflow: hidden; }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; }
+        .btn-secondary { background: linear-gradient(135deg, #f8fafc, #f1f5f9); color: #475569; border: 1px solid #e2e8f0; }
+        .output-section { margin-bottom: 25px; }
+        .output-section h3 { color: #495057; margin: 0 0 15px; font-size: 1.1rem; font-weight: 600; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; }
+        .output-content { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.6; max-height: 250px; overflow: auto; direction: ltr; }
+        .status { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; text-align: center; }
+        .status.valid { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+        .status.invalid { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>JsonToForm فارسی</h1>
+            <p>نمونه کاربرد پلاگین jQuery برای تبدیل JSON Schema به فرم HTML</p>
+        </div>
+        
+        <div class="demo-content">
+            <div class="form-panel">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div>در حال بارگذاری فرم...</div>
+                </div>
+                <div id="jsonEditor" style="display: none;"></div>
+            </div>
+            
+            <div class="output-panel">
+                <div class="status valid" id="validationStatus">
+                    ✅ فرم معتبر است
+                </div>
+                
+                <div class="output-section">
+                    <h3>📊 مقادیر JSON</h3>
+                    <pre class="output-content" id="jsonValue">{}</pre>
+                </div>
+                
+                <div class="output-section">
+                    <h3>🔍 وضعیت اعتبارسنجی</h3>
+                    <pre class="output-content" id="validationInfo">بدون خطا</pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" onclick="loadPersonalData()">👤 اطلاعات شخصی</button>
+            <button class="btn btn-primary" onclick="loadCompanyData()">🏢 اطلاعات شرکت</button>
+            <button class="btn btn-secondary" onclick="clearForm()">🗑️ پاک کردن فرم</button>
+            <button class="btn btn-secondary" onclick="validateForm()">✅ بررسی اعتبار</button>
+        </div>
+    </div>
+
+    <script>
+        let formInstance;
+        // Schemas and data are identical to root demo-farsi, omitted for brevity
+        const personalSchema = { "title": "فرم اطلاعات شخصی", "type": "object", "properties": {"personalInfo": {"title": "اطلاعات شخصی","type": "object","properties": {"firstName": {"title": "نام","type": "string","minLength": 2,"maxLength": 50,"ui": {"placeholderHint": "نام خود را وارد کنید","hoverHint": "نام شما به شکل رسمی","inlineHint": "نام باید حداقل ۲ کاراکتر باشد","validationHint": "نام باید بین ۲ تا ۵۰ کاراکتر باشد"}},"lastName": {"title": "نام خانوادگی","type": "string","minLength": 2,"maxLength": 50,"ui": {"placeholderHint": "نام خانوادگی خود را وارد کنید"}},"email": {"title": "ایمیل","type": "string","ui": {"editor": "email","placeholderHint": "example@domain.com"}},"phone": {"title": "تلفن همراه","type": "string","ui": {"editor": "tel","placeholderHint": "09123456789"}},"birthDate": {"title": "تاریخ تولد","type": "string","ui": {"editor": "date"}},"gender": {"title": "جنسیت","type": "string","enum": ["مرد","زن","ترجیح می‌دهم نگویم"],"ui": {"editor": "radio"}},"maritalStatus": {"title": "وضعیت تأهل","type": "string","enum": ["مجرد","متأهل","مطلقه","بیوه"],"ui": {"editor": "select"}},"bio": {"title": "درباره خودتان","type": "string","maxLength": 500,"ui": {"editor": "textarea","placeholderHint": "توضیح مختصری درباره خودتان بنویسید...","inlineHint": "اختیاری: حداکثر ۵۰۰ کاراکتر"}}},"required": ["firstName","lastName","email"]},"address": {"title": "اطلاعات آدرس","type": "object","properties": {"country": {"title": "کشور","type": "string","enum": ["ایران","آمریکا","کانادا","آلمان","فرانسه"],"ui": {"editor": "select"}},"city": {"title": "شهر","type": "string"},"postalCode": {"title": "کد پستی","type": "string","pattern": "^[0-9]{10}$","ui": {"placeholderHint": "1234567890","validationHint": "کد پستی باید ۱۰ رقم باشد"}},"fullAddress": {"title": "آدرس کامل","type": "string","ui": {"editor": "textarea"}}}},"interests": {"title": "علایق و مهارت‌ها","type": "array","items": {"type": "string"},"ui": {"inlineHint": "علایق و مهارت‌های خود را اضافه کنید"}}},"required": ["personalInfo"]};
+        const companySchema = { "title": "فرم اطلاعات شرکت","type": "object","properties": {"companyInfo": {"title": "اطلاعات شرکت","type": "object","properties": {"name": {"title": "نام شرکت","type": "string","minLength": 2,"ui": {"placeholderHint": "نام شرکت یا سازمان"}},"type": {"title": "نوع شرکت","type": "string","enum": ["سهامی عام","سهامی خاص","با مسئولیت محدود","تعاونی","دولتی"],"ui": {"editor": "select"}},"industry": {"title": "صنعت","type": "string","enum": ["فناوری اطلاعات","مالی","آموزش","بهداشت","تولیدی","خدماتی"],"ui": {"editor": "radio"}},"size": {"title": "اندازه شرکت","type": "string","enum": ["کوچک (کمتر از ۵۰ نفر)","متوسط (۵۰-۲۵۰ نفر)","بزرگ (بیش از ۲۵۰ نفر)"],"ui": {"editor": "radio"}},"website": {"title": "وبسایت","type": "string","ui": {"placeholderHint": "https://example.com"}},"description": {"title": "توضیحات شرکت","type": "string","ui": {"editor": "textarea","placeholderHint": "توضیح مختصری درباره فعالیت‌های شرکت..."}}},"required": ["name","type","industry"]},"employees": {"title": "لیست کارمندان","type": "array","items": {"type": "object","properties": {"name": {"title": "نام کارمند","type": "string"},"position": {"title": "سمت","type": "string","enum": ["مدیرعامل","مدیر","کارشناس","کارشناس ارشد","متخصص"]},"department": {"title": "بخش","type": "string","enum": ["فناوری اطلاعات","منابع انسانی","مالی","بازاریابی","فروش","عملیات"]},"salary": {"title": "حقوق (ریال)","type": "number","minimum": 0,"ui": {"editor": "number"}},"fullTime": {"title": "تمام وقت","type": "boolean"}},"required": ["name","position","department"]},"ui": {"inlineHint": "اطلاعات کارمندان شرکت را اضافه کنید"}}},"required": ["companyInfo"]};
+        const personalData = {"personalInfo": {"firstName": "علی","lastName": "احمدی","email": "ali.ahmadi@example.com","phone": "09123456789","birthDate": "1990-05-15","gender": "مرد","maritalStatus": "متأهل","bio": "توسعه‌دهنده نرم‌افزار با تخصص در JavaScript و React"},"address": {"country": "ایران","city": "تهران","postalCode": "1234567890","fullAddress": "تهران، خیابان ولیعصر، کوچه سی‌ام، پلاک ۱۲۳"},"interests": ["برنامه‌نویسی","مطالعه","ورزش"]};
+        const companyData = {"companyInfo": {"name": "شرکت فناوری پیشگامان","type": "سهامی خاص","industry": "فناوری اطلاعات","size": "متوسط (۵۰-۲۵۰ نفر)","website": "https://pioneers-tech.com","description": "شرکت متخصص در ارائه راه‌حل‌های نرم‌افزاری و خدمات فناوری اطلاعات"},"employees": [{"name": "احمد رضایی","position": "مدیرعامل","department": "مدیریت","salary": 50000000,"fullTime": true},{"name": "فاطمه محمدی","position": "کارشناس ارشد","department": "فناوری اطلاعات","salary": 30000000,"fullTime": true}]};
+
+        function initializeForm(schema, data = {}) {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('jsonEditor').style.display = 'none';
+            setTimeout(() => {
+                try {
+                    if (formInstance) { $("#jsonEditor").empty(); formInstance = null; }
+                    if (typeof $.fn.jsonToForm !== 'function') { throw new Error('JsonToForm plugin not loaded'); }
+                    formInstance = $("#jsonEditor").jsonToForm({ schema: schema, value: data || {}, afterValueChanged: updateOutput, afterWidgetCreated: updateOutput });
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('jsonEditor').style.display = 'block';
+                    setTimeout(updateOutput, 200);
+                } catch (error) {
+                    console.error('خطا در بارگذاری فرم:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('jsonEditor').style.display = 'block';
+                }
+            }, 300);
+        }
+
+        function updateOutput() {
+            if (!formInstance) return;
+            const value = formInstance.getValue();
+            document.getElementById('jsonValue').textContent = JSON.stringify(value, null, 2);
+            const isValid = formInstance.isValid();
+            const statusEl = document.getElementById('validationStatus');
+            if (isValid) { statusEl.className = 'status valid'; statusEl.textContent = '✅ فرم معتبر است'; document.getElementById('validationInfo').textContent = 'هیچ خطای اعتبارسنجی موجود نیست'; }
+            else { statusEl.className = 'status invalid'; statusEl.textContent = '❌ فرم دارای خطا است'; document.getElementById('validationInfo').textContent = 'خطاهای اعتبارسنجی شناسایی شده'; }
+        }
+
+        function loadPersonalData() { initializeForm(personalSchema, personalData); }
+        function loadCompanyData() { initializeForm(companySchema, companyData); }
+        function clearForm() { if (formInstance) { formInstance.setValue({}); updateOutput(); } }
+        function validateForm() { if (formInstance) { updateOutput(); } }
+
+        $(document).ready(function() { loadPersonalData(); });
+    </script>
+</body>
+</html>

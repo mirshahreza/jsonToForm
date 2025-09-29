@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script src="../jquery/jquery.min.js"></script>
+
+    <script src="./jsonToForm/jsonToForm.js"></script>
+    <link href="./jsonToForm/jsonToForm.css" rel="stylesheet" type="text/css" />
+
+    <script>
+
+        var s = {
+            "title": "json schema sample",
+            "type": "object",
+            "properties": {
+                "stringField": {
+                    "title": "String Field",
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 10,
+                    "ui": {
+                        "placeholderHint": "Enter string",
+                        "hoverHint": "this is a text for test the mouse hover",
+                        "inlineHint": "this is a text to show we can additional text below the input box",
+                        "validationHint": "length of your text must be >4 and <11 characters"
+                    }
+                },
+                "colorField": {
+                    "title": "Color Field",
+                    "type": "string",
+                    "ui": {
+                        "editor": "color"
+                    }
+                },
+                "dateField": {
+                    "title": "Date Field",
+                    "type": "string",
+                    "ui": {
+                        "editor": "date"
+                    }
+                },
+                "numberField": {
+                    "title": "Number Field",
+                    "type": "number",
+                    "minimum": 5,
+                    "maximum": 10,
+                    "ui": {
+                        "editor": "number"
+                    }
+                },
+                "booleanField": {
+                    "title": "Boolean Field",
+                    "type": "boolean"
+                },
+                "HtmlField": {
+                    "title": "Html Field",
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 10,
+                    "ui": {
+                        "editor": "html"
+                    }
+                },
+                "selectField": {
+                    "title": "Select Field",
+                    "type": "string",
+                    "enum": [
+                        "item 1", "item 2"
+                    ],
+                    "ui": {
+                        "editor": "select"
+                    }
+                },
+                "radioField": {
+                    "title": "Radio Field",
+                    "type": "string",
+                    "enum": [
+                        "item 1", "item 2"
+                    ],
+                    "ui": {
+                        "editor": "radio"
+                    }
+                },
+                "stringArray": {
+                    "title": "String Array",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "ui": {
+                        "inlineHint": "this is an inline hint for ..."
+                    }
+                },
+                "objectArray": {
+                    "title": "Object Array",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/objectField"
+                    }
+                }
+            },
+            "required": [
+                "stringField",
+                "booleanField",
+                "selectField",
+                "htmlField"
+            ],
+            "ui": {
+                "inlineHint": "this is an inline hint for main node"
+            },
+            "definitions": {
+                "objectField": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "STRING",
+                                "CHAR",
+                                "TEXT"
+                            ]
+                        },
+                        "allowNull": {
+                            "type": "boolean"
+                        },
+                        "relation": {
+                            "type": "object",
+                            "properties": {
+                                "tableName": {
+                                    "type": "string"
+                                },
+                                "keyFieldName": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "type"
+                    ]
+                },
+                "API": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "CREATE",
+                                "READ",
+                                "UPDATE",
+                                "DELETE"
+                            ]
+                        },
+                        "allowedFields": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        var v = {
+            "stringField": "my string",
+            "colorField": "#008000",
+            "dateField": "2019-01-17",
+            "numberField": "6",
+            "booleanField": true,
+            "HtmlField": "this is a <b>html</b>",
+            "selectField": "item 2",
+            "radioField": "item 1",
+            "stringArray": [
+                "s 1",
+                "s 2"
+            ],
+            "objectArray": [
+                {
+                    "name": "my field",
+                    "type": "CHAR",
+                    "allowNull": true,
+                    "relation": {
+                        "tableName": "t1",
+                        "keyFieldName": "f1"
+                    }
+                }
+            ]
+        };
+
+        var je;
+        $(document).ready(function () {
+            je = $("#jsonEditor").jsonToForm({
+                "schema": s,
+                "value": v,
+                "renderMode": "current",
+                "showModeSelector": true,
+                "afterValueChanged": function (newValue, newSchema) {
+                    $("#jsonValue").html(JSON.stringify(newValue, null, 2));
+                    setValidity();
+                },
+                "afterWidgetCreated": function (newValue, newSchema) {
+                    $("#jsonValue").html(JSON.stringify(newValue, null, 2));
+                    setValidity();
+                }
+            });
+        });
+
+        function setValidity() {
+            if (je) $("#jsonValidity").html(JSON.stringify(je.isValid()));
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <table style="width: 100%;vertical-align: text-top;">
+        <tr>
+            <td style="width:58%;vertical-align: top;">
+                <div id="jsonEditor"></div>
+            </td>
+            <td style="width:2%">&nbsp;</td>
+            <td style="width:40%;vertical-align: top;">
+                <b>json value</b> :
+                <pre id="jsonValue"></pre>
+
+                <b>Is Valid</b> :
+                <pre id="jsonValidity">true</pre>
+            </td>
+        </tr>
+
+    </table>
+
+
+</body>
+
+</html>

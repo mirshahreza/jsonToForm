@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "A modern jQuery plugin for converting JSON schemas to beautiful HTML forms with real-time validation",
   "main": "jsonToForm/jsonToForm.v2.js",
-  "types": "src/types/jsonToForm.d.ts",
+  "types": "jsonToForm/jsonToForm.d.ts",
   "scripts": {
     "build": "node build/build.js",
     "dev": "python -m http.server 8080",

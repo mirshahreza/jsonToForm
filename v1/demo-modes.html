@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JsonToForm - نمایش حالات مختلف رندر (v1)</title>
+    <script src="../jquery/jquery.min.js"></script>
+    <script src="./jsonToForm/jsonToForm.js"></script>
+    <link href="./jsonToForm/jsonToForm.css" rel="stylesheet" type="text/css" />
+    <style> body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;margin:20px;background:#f5f5f5}.demo-container{max-width:1200px;margin:0 auto;background:white;padding:20px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.1)}.demo-header{text-align:center;margin-bottom:30px}.demo-header h1{color:#333;margin-bottom:10px}.demo-header p{color:#666;font-size:16px}.demo-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}.form-panel{background:#fafafa;padding:20px;border-radius:5px;border:1px solid #e0e0e0}.output-panel{background:#f8f9fa;padding:15px;border-radius:5px;border:1px solid #dee2e6}.output-section{margin-bottom:20px}.output-title{font-weight:700;color:#495057;margin-bottom:8px;font-size:14px}.output-content{background:#fff;border:1px solid #ced4da;border-radius:3px;padding:10px;font-family:'Courier New',monospace;font-size:12px;max-height:200px;overflow-y:auto;white-space:pre-wrap}.validity-indicator{padding:5px 10px;border-radius:3px;font-weight:700;text-align:center}.validity-true{background:#d4edda;color:#155724;border:1px solid #c3e6cb}.validity-false{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}@media (max-width:768px){.demo-layout{grid-template-columns:1fr}}</style>
+
+    <script>
+        var sampleSchema = { "title": "فرم نمونه برای تست حالات مختلف رندر","type": "object","properties": {"personalInfo": {"title": "اطلاعات شخصی","type": "object","properties": {"firstName": {"title": "نام","type": "string","minLength": 2,"maxLength": 50,"ui": {"placeholderHint": "نام خود را وارد کنید","inlineHint": "نام باید حداقل ۲ کاراکتر باشد"}},"lastName": {"title": "نام خانوادگی","type": "string","minLength": 2,"maxLength": 50,"ui": {"placeholderHint": "نام خانوادگی خود را وارد کنید"}},"email": {"title": "ایمیل","type": "email","ui": {"placeholderHint": "example@domain.com"}},"phone": {"title": "تلفن","type": "tel","ui": {"placeholderHint": "09123456789"}},"birthDate": {"title": "تاریخ تولد","type": "string","ui": {"editor": "date"}},"gender": {"title": "جنسیت","type": "string","enum": ["مرد","زن"],"ui": {"editor": "radio"}},"isMarried": {"title": "متاهل","type": "boolean"}},"required": ["firstName","lastName","email"]},"address": {"title": "آدرس","type": "object","properties": {"country": {"title": "کشور","type": "string","enum": ["ایران","آلمان","کانادا","استرالیا"],"ui": {"editor": "select"}},"city": {"title": "شهر","type": "string"},"address": {"title": "آدرس کامل","type": "string","ui": {"editor": "textarea"}},"postalCode": {"title": "کد پستی","type": "string"}},"required": ["country","city","address"]},"skills": {"title": "مهارت‌ها","type": "array","items": {"type": "string"},"ui": {"inlineHint": "مهارت‌های خود را اضافه کنید"}},"workExperience": {"title": "سوابق کاری","type": "array","items": {"type": "object","properties": {"company": {"title": "نام شرکت","type": "string"},"position": {"title": "سمت","type": "string"},"startDate": {"title": "تاریخ شروع","type": "string","ui": {"editor": "date"}},"endDate": {"title": "تاریخ پایان","type": "string","ui": {"editor": "date"}},"description": {"title": "شرح وظایف","type": "string","ui": {"editor": "textarea"}}},"required": ["company","position","startDate"]}},"preferences": {"title": "تنظیمات","type": "object","properties": {"favoriteColor": {"title": "رنگ مورد علاقه","type": "string","ui": {"editor": "color"}},"newsletter": {"title": "عضویت در خبرنامه","type": "boolean"},"language": {"title": "زبان ترجیحی","type": "string","enum": ["فارسی","English","Deutsch"],"ui": {"editor": "select"}}}}},"required": ["personalInfo","address"] };
+        var sampleValue = { "personalInfo": { "firstName": "علی", "lastName": "احمدی", "email": "ali.ahmadi@example.com", "phone": "09123456789", "birthDate": "1990-05-15", "gender": "مرد", "isMarried": true }, "address": { "country": "ایران", "city": "تهران", "address": "خیابان ولیعصر، کوچه ۱۲، پلاک ۳۴", "postalCode": "1234567890" }, "skills": [ "JavaScript", "React", "Node.js" ], "workExperience": [ { "company": "شرکت فناوری نوین", "position": "برنامه‌نویس ارشد", "startDate": "2020-01-01", "endDate": "2023-12-31", "description": "توسعه اپلیکیشن‌های وب با استفاده از فریمورک‌های مدرن" } ], "preferences": { "favoriteColor": "#3498db", "newsletter": true, "language": "فارسی" } };
+
+        var jsonFormInstance;
+        $(document).ready(function () {
+            jsonFormInstance = $("#jsonEditor").jsonToForm({ "schema": sampleSchema, "value": sampleValue, "renderMode": "current", "showModeSelector": true, "afterValueChanged": function (newValue) { updateOutput(newValue); }, "afterWidgetCreated": function (newValue) { updateOutput(newValue); } });
+        });
+        function updateOutput(value) { $("#jsonValue").text(JSON.stringify(value, null, 2)); updateValidity(); }
+        function updateValidity() { if (jsonFormInstance) { var isValid = jsonFormInstance.isValid(); var validityElement = $("#jsonValidity"); validityElement.text(isValid ? "معتبر" : "نامعتبر"); validityElement.removeClass("validity-true validity-false"); validityElement.addClass(isValid ? "validity-true" : "validity-false"); } }
+    </script>
+</head>
+
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>JsonToForm - نمایش حالات مختلف رندر</h1>
+            <p>این فرم سه حالت رندر مختلف را پشتیبانی می‌کند: حالت فعلی، جدول ویژگی‌ها و فرم استاندارد</p>
+        </div>
+        
+        <div class="demo-layout">
+            <div class="form-panel">
+                <div id="jsonEditor"></div>
+            </div>
+            
+            <div class="output-panel">
+                <div class="output-section">
+                    <div class="output-title">وضعیت اعتبار:</div>
+                    <div id="jsonValidity" class="validity-indicator validity-true">معتبر</div>
+                </div>
+                
+                <div class="output-section">
+                    <div class="output-title">مقادیر JSON:</div>
+                    <div id="jsonValue" class="output-content"></div>
+                </div>
+                
+                <div class="output-section">
+                    <div class="output-title">راهنما:</div>
+                    <div class="output-content" style="max-height: 150px; font-size: 11px;">• حالت فعلی: طراحی اصلی با ساختار درختی
+• جدول ویژگی‌ها: نمایش در قالب جدول مانند Property Grid
+• فرم استاندارد: طراحی فرم کلاسیک با fieldset ها
+
+از منوی بالای فرم می‌توانید بین حالات مختلف تغییر دهید.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

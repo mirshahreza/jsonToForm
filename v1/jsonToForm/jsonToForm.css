@@ -1,0 +1,308 @@
+.j-container {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    border-width: 0px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.j-container td {
+    padding: 0px;
+    word-wrap: break-word;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.j-action-col {
+    width: 30px;
+    min-width: 30px;
+    max-width: 30px;
+    text-align: center;
+    vertical-align: top;
+    padding: 2px !important;
+    overflow: visible;
+}
+
+.j-container tr {
+    outline: 0px solid gainsboro;
+}
+
+.j-title-col {
+    width: 200px;
+    max-width: 200px;
+    min-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+
+.j-sep-col {
+    width: 0px;
+    background-color:#f6f6f6;
+}
+
+.j-spacer-row {
+    min-height:5px;
+    background-color:#e8f2ff;
+    margin:10px 0px 10px 0px;
+}
+
+.j-input-text,.j-input-select,.j-input-textarea,.j-input-date,.j-input-number,.j-input-html,.j-input-email,.j-input-tel {
+    width: 100%;
+    max-width: 100%;
+    border: 2px solid #e6e6e6;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.j-input-text{
+    background-color:#fefefe;
+    border-radius:5px;
+}
+
+.j-input-text:disabled{
+    border-color:#f0f5ff;
+    background-color:#f5f8ff;
+}
+
+.j-input-radio-label,.j-input-radio {
+    vertical-align:middle;
+}
+
+.j-input-radio-label{
+    margin-left:5px;
+}
+
+.j-input-text::placeholder{
+    color: silver;
+}
+
+.j-input-html-div{
+    padding: 8px;
+    margin-top: 3px;   
+    margin-bottom: 3px;
+    margin-left: 2px;
+    margin-right: 2px;   
+}
+
+.j-input-html{
+    width: 0px;
+    height: 0px;
+    padding: 0px;
+    border-width: 0px;
+}
+
+.j-input-textarea{
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.j-input-text:focus,.j-input-select:focus,.j-input-textarea:focus,.j-input-date:focus,.j-input-number:focus,.j-input-html-div:focus {
+    outline: 1px solid gainsboro;
+}
+
+
+
+
+.j-oject-title-row,.j-array-title-row,
+.j-oject-title-row td,.j-array-title-row td {
+    font-weight: bold;
+    font-size: 14px;
+    background-color: gainsboro;
+}
+
+.j-oject-title-row .j-title-col,.j-array-title-row .j-title-col {
+    padding: 3px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+
+.j-oject-value-row td {
+    font-size: 12px;
+}
+
+.j-oject-value-row .j-title-col {
+    padding: 6px !important;
+    font-size: 12px;
+}
+
+
+
+.j-add-array-item{
+    cursor: pointer;
+    margin-left: 4px;
+    margin-right: 4px;
+    font-weight: bolder;
+    font-size: 12px;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 50%;
+    border: 1px solid green;
+    background: white;
+    color: green;
+    vertical-align: middle;
+}
+
+.j-remove-array-item{
+    font-family: 'Arial';
+    color: red;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 50%;
+    border: 1px solid red;
+    background: white;
+    margin: 1px;
+    vertical-align: middle;
+}
+
+.j-ec {
+    width: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.j-collapsed{
+    display: none;
+}
+
+.j-body-col {
+    font-size: 12px;
+    width: auto;
+    overflow: visible;
+    vertical-align: top;
+}
+
+.j-inline-help {
+    margin-top: 7px !important;
+    margin-bottom: 5px !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    color: gray;
+}
+
+.j-validation-help {
+    margin-top: 7px !important;
+    margin-bottom: 5px !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    color: orange;
+}
+
+.j-input[data-is-valid="false"] {
+    outline: 1px solid red !important;
+    outline-offset: -2px;
+}
+
+.j-input[data-is-valid="true"].j-validation-help {
+    display: none;
+}
+
+.j-required-star {
+    color: red;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+/* کنترل کلی overflow */
+body {
+    overflow-x: hidden;
+}
+
+#jsonEditor {
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.form-panel {
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+/* جلوگیری از overflow در تمام سایزها */
+.j-container table {
+    table-layout: fixed;
+    width: 100%;
+    max-width: 100%;
+}
+
+.j-oject-value-row {
+    width: 100%;
+}
+
+.j-oject-value-row td {
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+    .j-title-col {
+        width: 150px !important;
+        min-width: 100px;
+        font-size: 11px;
+    }
+    
+    .j-body-col {
+        width: auto !important;
+    }
+    
+    .j-action-col {
+        width: 25px !important;
+        min-width: 25px !important;
+    }
+    
+    .j-container {
+        font-size: 11px;
+    }
+    
+    .j-input-text, .j-input-select, .j-input-textarea, 
+    .j-input-date, .j-input-number, .j-input-html, 
+    .j-input-email, .j-input-tel {
+        padding: 3px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .j-title-col {
+        width: 120px !important;
+        min-width: 80px !important;
+        font-size: 10px;
+    }
+    
+    .j-body-col {
+        width: auto !important;
+    }
+    
+    .j-action-col {
+        width: 20px !important;
+        min-width: 20px !important;
+    }
+    
+    .j-sep-col {
+        display: none;
+    }
+    
+    .j-remove-array-item, .j-add-array-item {
+        width: 16px;
+        height: 16px;
+        font-size: 10px;
+        line-height: 14px;
+    }
+}
