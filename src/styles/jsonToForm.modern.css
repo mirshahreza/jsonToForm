@@ -1,0 +1,594 @@
+/**
+ * JsonToForm v2.0 - Modern CSS Styles
+ * 
+ * Features:
+ * - CSS Custom Properties for theming
+ * - Flexbox/Grid layouts for responsiveness
+ * - Modern design with smooth animations
+ * - Accessibility improvements
+ * - Dark/Light theme support
+ */
+
+/* ===== CSS CUSTOM PROPERTIES (CSS VARIABLES) ===== */
+:root {
+  /* Color Palette */
+  --jtf-primary-color: #007bff;
+  --jtf-secondary-color: #6c757d;
+  --jtf-success-color: #28a745;
+  --jtf-danger-color: #dc3545;
+  --jtf-warning-color: #ffc107;
+  --jtf-info-color: #17a2b8;
+  
+  /* Background Colors */
+  --jtf-bg-primary: #ffffff;
+  --jtf-bg-secondary: #f8f9fa;
+  --jtf-bg-tertiary: #e9ecef;
+  --jtf-bg-input: #ffffff;
+  --jtf-bg-input-disabled: #f5f5f5;
+  --jtf-bg-input-focus: #ffffff;
+  
+  /* Text Colors */
+  --jtf-text-primary: #212529;
+  --jtf-text-secondary: #6c757d;
+  --jtf-text-muted: #999999;
+  --jtf-text-inverse: #ffffff;
+  
+  /* Border Colors */
+  --jtf-border-color: #dee2e6;
+  --jtf-border-color-focus: var(--jtf-primary-color);
+  --jtf-border-color-error: var(--jtf-danger-color);
+  --jtf-border-color-success: var(--jtf-success-color);
+  
+  /* Spacing */
+  --jtf-spacing-xs: 0.25rem;
+  --jtf-spacing-sm: 0.5rem;
+  --jtf-spacing-md: 1rem;
+  --jtf-spacing-lg: 1.5rem;
+  --jtf-spacing-xl: 3rem;
+  
+  /* Typography */
+  --jtf-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --jtf-font-size-xs: 0.75rem;
+  --jtf-font-size-sm: 0.875rem;
+  --jtf-font-size-base: 1rem;
+  --jtf-font-size-lg: 1.25rem;
+  --jtf-font-weight-normal: 400;
+  --jtf-font-weight-medium: 500;
+  --jtf-font-weight-bold: 600;
+  
+  /* Borders & Radius */
+  --jtf-border-width: 1px;
+  --jtf-border-radius: 0.375rem;
+  --jtf-border-radius-sm: 0.25rem;
+  --jtf-border-radius-lg: 0.5rem;
+  
+  /* Shadows */
+  --jtf-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --jtf-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --jtf-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  
+  /* Transitions */
+  --jtf-transition: all 0.2s ease-in-out;
+  --jtf-transition-fast: all 0.1s ease-in-out;
+  
+  /* Z-index */
+  --jtf-z-dropdown: 1000;
+  --jtf-z-modal: 1050;
+  --jtf-z-tooltip: 1070;
+}
+
+/* ===== DARK THEME ===== */
+[data-json-form-theme="dark"] {
+  --jtf-bg-primary: #1a1a1a;
+  --jtf-bg-secondary: #2d2d2d;
+  --jtf-bg-tertiary: #404040;
+  --jtf-bg-input: #2d2d2d;
+  --jtf-bg-input-disabled: #404040;
+  --jtf-bg-input-focus: #2d2d2d;
+  
+  --jtf-text-primary: #ffffff;
+  --jtf-text-secondary: #b3b3b3;
+  --jtf-text-muted: #888888;
+  
+  --jtf-border-color: #404040;
+  --jtf-primary-color: #4dabf7;
+}
+
+/* ===== RESET & BASE STYLES ===== */
+.j-container {
+  font-family: var(--jtf-font-family);
+  font-size: var(--jtf-font-size-base);
+  color: var(--jtf-text-primary);
+  background-color: var(--jtf-bg-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.j-container *,
+.j-container *::before,
+.j-container *::after {
+  box-sizing: border-box;
+}
+
+/* ===== LAYOUT COMPONENTS ===== */
+
+/* Field Row - Using Flexbox for Modern Layout */
+.j-field-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--jtf-spacing-sm);
+  margin-bottom: var(--jtf-spacing-md);
+}
+
+@media (min-width: 768px) {
+  .j-field-row {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+  .j-field-label-col {
+    flex: 0 0 200px;
+    padding-right: var(--jtf-spacing-md);
+  }
+  
+  .j-field-input-col {
+    flex: 1;
+    min-width: 0; /* Prevent flex item overflow */
+  }
+}
+
+/* Object Container */
+.j-object-container {
+  background-color: var(--jtf-bg-primary);
+  border: var(--jtf-border-width) solid var(--jtf-border-color);
+  border-radius: var(--jtf-border-radius);
+  margin-bottom: var(--jtf-spacing-md);
+  overflow: hidden;
+  transition: var(--jtf-transition);
+}
+
+.j-object-header {
+  background-color: var(--jtf-bg-secondary);
+  padding: var(--jtf-spacing-sm) var(--jtf-spacing-md);
+  border-bottom: var(--jtf-border-width) solid var(--jtf-border-color);
+  font-weight: var(--jtf-font-weight-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--jtf-spacing-sm);
+}
+
+.j-object-body {
+  padding: var(--jtf-spacing-md);
+}
+
+.j-object-body.j-collapsed {
+  display: none;
+}
+
+/* Array Container */
+.j-array-container {
+  background-color: var(--jtf-bg-primary);
+  border: var(--jtf-border-width) solid var(--jtf-border-color);
+  border-radius: var(--jtf-border-radius);
+  margin-bottom: var(--jtf-spacing-md);
+  overflow: hidden;
+}
+
+.j-array-header {
+  background-color: var(--jtf-bg-tertiary);
+  padding: var(--jtf-spacing-sm) var(--jtf-spacing-md);
+  border-bottom: var(--jtf-border-width) solid var(--jtf-border-color);
+  font-weight: var(--jtf-font-weight-medium);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--jtf-spacing-sm);
+}
+
+.j-array-body {
+  padding: var(--jtf-spacing-md);
+}
+
+.j-array-body.j-collapsed {
+  display: none;
+}
+
+.j-array-item {
+  background-color: var(--jtf-bg-secondary);
+  border: var(--jtf-border-width) solid var(--jtf-border-color);
+  border-radius: var(--jtf-border-radius-sm);
+  padding: var(--jtf-spacing-md);
+  margin-bottom: var(--jtf-spacing-sm);
+  position: relative;
+  transition: var(--jtf-transition);
+}
+
+.j-array-item:hover {
+  box-shadow: var(--jtf-shadow-sm);
+}
+
+.j-array-item:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== FORM CONTROLS ===== */
+
+/* Label Styles */
+.j-field-label {
+  display: block;
+  font-weight: var(--jtf-font-weight-medium);
+  color: var(--jtf-text-primary);
+  margin-bottom: var(--jtf-spacing-xs);
+  font-size: var(--jtf-font-size-sm);
+}
+
+/* Input Base Styles */
+.j-input {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: var(--jtf-spacing-sm) var(--jtf-spacing-sm);
+  font-size: var(--jtf-font-size-base);
+  font-weight: var(--jtf-font-weight-normal);
+  line-height: 1.5;
+  color: var(--jtf-text-primary);
+  background-color: var(--jtf-bg-input);
+  background-clip: padding-box;
+  border: var(--jtf-border-width) solid var(--jtf-border-color);
+  border-radius: var(--jtf-border-radius);
+  transition: var(--jtf-transition);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.j-input:focus {
+  border-color: var(--jtf-border-color-focus);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  background-color: var(--jtf-bg-input-focus);
+}
+
+.j-input:disabled {
+  background-color: var(--jtf-bg-input-disabled);
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.j-input::placeholder {
+  color: var(--jtf-text-muted);
+  opacity: 1;
+}
+
+/* Input Variants inherit base styles from .j-input */
+
+.j-input-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.j-input-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right var(--jtf-spacing-sm) center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.j-input-color {
+  width: 60px;
+  height: 38px;
+  padding: 2px;
+  border: var(--jtf-border-width) solid var(--jtf-border-color);
+  border-radius: var(--jtf-border-radius);
+  background-color: var(--jtf-bg-input);
+  cursor: pointer;
+}
+
+/* Checkbox Styles */
+.j-input-checkbox {
+  width: auto;
+  margin-right: var(--jtf-spacing-xs);
+  cursor: pointer;
+}
+
+/* Radio Group Styles */
+.j-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--jtf-spacing-xs);
+}
+
+@media (min-width: 576px) {
+  .j-radio-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--jtf-spacing-md);
+  }
+}
+
+.j-radio-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: var(--jtf-font-size-sm);
+}
+
+.j-radio-option input[type="radio"] {
+  width: auto;
+  margin-right: var(--jtf-spacing-xs);
+  cursor: pointer;
+}
+
+.j-radio-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* HTML Editor */
+.j-input-html {
+  display: none;
+}
+
+.j-input-html-div {
+  min-height: 100px;
+  padding: var(--jtf-spacing-sm);
+  border: var(--jtf-border-width) solid var(--jtf-border-color);
+  border-radius: var(--jtf-border-radius);
+  background-color: var(--jtf-bg-input);
+  transition: var(--jtf-transition);
+  outline: none;
+}
+
+.j-input-html-div:focus {
+  border-color: var(--jtf-border-color-focus);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.j-input-html-div:empty::before {
+  content: "Enter your content here...";
+  color: var(--jtf-text-muted);
+}
+
+/* ===== VALIDATION STATES ===== */
+.j-input[data-is-valid="false"] {
+  border-color: var(--jtf-border-color-error);
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+.j-input[data-is-valid="true"] {
+  border-color: var(--jtf-border-color-success);
+}
+
+.j-input-focused {
+  border-color: var(--jtf-border-color-focus);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* ===== HELP TEXT & MESSAGES ===== */
+.j-inline-help {
+  font-size: var(--jtf-font-size-xs);
+  color: var(--jtf-text-secondary);
+  margin-top: var(--jtf-spacing-xs);
+  line-height: 1.4;
+}
+
+.j-validation-help {
+  font-size: var(--jtf-font-size-xs);
+  color: var(--jtf-warning-color);
+  margin-top: var(--jtf-spacing-xs);
+  line-height: 1.4;
+}
+
+.j-validation-message {
+  font-size: var(--jtf-font-size-xs);
+  color: var(--jtf-danger-color);
+  margin-top: var(--jtf-spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--jtf-spacing-xs);
+}
+
+.j-validation-message::before {
+  content: "⚠";
+  font-size: 0.875em;
+}
+
+.j-required-star {
+  color: var(--jtf-danger-color);
+  font-weight: var(--jtf-font-weight-bold);
+  margin-left: var(--jtf-spacing-xs);
+}
+
+/* ===== BUTTONS & CONTROLS ===== */
+.j-expand-collapse-btn,
+.j-add-array-item,
+.j-remove-array-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--jtf-spacing-xs) var(--jtf-spacing-sm);
+  font-size: var(--jtf-font-size-sm);
+  font-weight: var(--jtf-font-weight-medium);
+  line-height: 1;
+  color: var(--jtf-text-inverse);
+  background-color: var(--jtf-primary-color);
+  border: none;
+  border-radius: var(--jtf-border-radius-sm);
+  cursor: pointer;
+  transition: var(--jtf-transition);
+  text-decoration: none;
+  user-select: none;
+}
+
+.j-expand-collapse-btn:hover,
+.j-add-array-item:hover,
+.j-remove-array-item:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+  box-shadow: var(--jtf-shadow-sm);
+}
+
+.j-expand-collapse-btn:active,
+.j-add-array-item:active,
+.j-remove-array-item:active {
+  transform: translateY(0);
+}
+
+.j-expand-collapse-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 0.75rem;
+  background-color: var(--jtf-secondary-color);
+}
+
+.j-add-array-item {
+  background-color: var(--jtf-success-color);
+  gap: var(--jtf-spacing-xs);
+}
+
+.j-remove-array-item {
+  background-color: var(--jtf-danger-color);
+  gap: var(--jtf-spacing-xs);
+}
+
+/* ===== SPACER & UTILITY ===== */
+.j-spacer {
+  display: inline-block;
+  width: var(--jtf-spacing-md);
+}
+
+.j-spacer-row {
+  background-color: var(--jtf-bg-secondary);
+  padding: var(--jtf-spacing-sm) var(--jtf-spacing-md);
+  margin: var(--jtf-spacing-md) 0;
+  border-radius: var(--jtf-border-radius);
+  font-size: var(--jtf-font-size-sm);
+  font-weight: var(--jtf-font-weight-medium);
+  color: var(--jtf-text-secondary);
+  border-left: 4px solid var(--jtf-primary-color);
+}
+
+.j-collapsed {
+  display: none !important;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 767px) {
+  .j-container {
+    font-size: var(--jtf-font-size-sm);
+  }
+  
+  .j-field-row {
+    gap: var(--jtf-spacing-xs);
+    margin-bottom: var(--jtf-spacing-sm);
+  }
+  
+  .j-object-header,
+  .j-array-header {
+    padding: var(--jtf-spacing-xs) var(--jtf-spacing-sm);
+    font-size: var(--jtf-font-size-sm);
+  }
+  
+  .j-object-body,
+  .j-array-body {
+    padding: var(--jtf-spacing-sm);
+  }
+  
+  .j-radio-group {
+    gap: var(--jtf-spacing-sm);
+  }
+  
+  .j-input {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus management for keyboard navigation */
+.j-input:focus-visible {
+  outline: 2px solid var(--jtf-primary-color);
+  outline-offset: 2px;
+}
+
+/* Screen reader only content */
+.j-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.j-array-item {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .j-container {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .j-expand-collapse-btn,
+  .j-add-array-item,
+  .j-remove-array-item {
+    display: none !important;
+  }
+  
+  .j-collapsed {
+    display: block !important;
+  }
+  
+  .j-input {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+}
+
+/* ===== LEGACY BROWSER SUPPORT ===== */
+/* Support for browsers that don't support CSS custom properties */
+.j-container.no-css-vars {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  color: #212529;
+  background-color: #ffffff;
+}
+
+.j-container.no-css-vars .j-input {
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+}
+
+.j-container.no-css-vars .j-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}

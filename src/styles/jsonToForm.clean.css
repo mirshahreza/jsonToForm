@@ -1,0 +1,314 @@
+/**
+ * JsonToForm v2.0 - Clean & Modern CSS
+ * Minimal, clean design with proper container management
+ */
+
+:root {
+  /* Modern Clean Palette */
+  --jtf-primary: #4f46e5;
+  --jtf-primary-light: rgba(79, 70, 229, 0.1);
+  --jtf-success: #16a34a;
+  --jtf-danger: #dc2626;
+  --jtf-warning: #f59e0b;
+  
+  /* Neutral Grays */
+  --jtf-gray-50: #f8fafc;
+  --jtf-gray-100: #f1f5f9;
+  --jtf-gray-200: #e2e8f0;
+  --jtf-gray-300: #cbd5e1;
+  --jtf-gray-400: #94a3b8;
+  --jtf-gray-500: #64748b;
+  --jtf-gray-600: #475569;
+  --jtf-gray-700: #334155;
+  --jtf-gray-800: #1e293b;
+  --jtf-gray-900: #0f172a;
+  
+  /* Spacing Scale */
+  --jtf-space-1: 0.25rem;
+  --jtf-space-2: 0.5rem;
+  --jtf-space-3: 0.75rem;
+  --jtf-space-4: 1rem;
+  --jtf-space-5: 1.25rem;
+  --jtf-space-6: 1.5rem;
+  --jtf-space-8: 2rem;
+  
+  /* Typography */
+  --jtf-text-xs: 0.75rem;
+  --jtf-text-sm: 0.875rem;
+  --jtf-text-base: 1rem;
+  --jtf-text-lg: 1.125rem;
+  
+  /* Radius */
+  --jtf-radius-sm: 0.375rem;
+  --jtf-radius: 0.5rem;
+  --jtf-radius-lg: 0.75rem;
+  
+  /* Shadows */
+  --jtf-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --jtf-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --jtf-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Base Container */
+.j-container {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--jtf-text-base);
+  line-height: 1.6;
+  color: var(--jtf-gray-800);
+  background: white;
+  border-radius: var(--jtf-radius);
+  border: 1px solid var(--jtf-gray-200);
+  padding: var(--jtf-space-6);
+  margin-bottom: var(--jtf-space-4);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Object & Array Headers */
+.j-oject-title-row,
+.j-array-title-row {
+  background: var(--jtf-gray-50) !important;
+}
+
+.j-oject-title-row td,
+.j-array-title-row td {
+  background: var(--jtf-gray-50) !important;
+  color: var(--jtf-gray-700) !important;
+  font-weight: 500 !important;
+  font-size: var(--jtf-text-sm) !important;
+  padding: var(--jtf-space-3) var(--jtf-space-4) !important;
+  border-bottom: 1px solid var(--jtf-gray-200) !important;
+}
+
+/* Field Rows */
+.j-oject-value-row td,
+.j-array-value-row td {
+  padding: var(--jtf-space-3) var(--jtf-space-4) !important;
+  vertical-align: top !important;
+}
+
+.j-title-col {
+  width: 200px !important;
+  min-width: 200px !important;
+  font-weight: 500 !important;
+  color: var(--jtf-gray-700) !important;
+  font-size: var(--jtf-text-sm) !important;
+  padding-right: var(--jtf-space-4) !important;
+}
+
+.j-body-col {
+  width: auto !important;
+  min-width: 0 !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.j-sep-col {
+  width: var(--jtf-space-2) !important;
+}
+
+/* Form Inputs - Base Styles */
+.j-input,
+.j-input-text,
+.j-input-textarea,
+.j-input-select,
+.j-input-number,
+.j-input-email,
+.j-input-tel,
+.j-input-url,
+.j-input-date,
+.j-input-time,
+.j-input-datetime-local {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  padding: var(--jtf-space-3) !important;
+  font-size: var(--jtf-text-sm) !important;
+  line-height: 1.5 !important;
+  color: var(--jtf-gray-800) !important;
+  background: white !important;
+  border: 1px solid var(--jtf-gray-300) !important;
+  border-radius: var(--jtf-radius-sm) !important;
+  transition: all 0.15s ease !important;
+  box-sizing: border-box !important;
+  font-family: inherit !important;
+}
+
+.j-input:focus,
+.j-input-text:focus,
+.j-input-textarea:focus,
+.j-input-select:focus,
+.j-input-number:focus,
+.j-input-email:focus,
+.j-input-tel:focus,
+.j-input-url:focus,
+.j-input-date:focus,
+.j-input-time:focus,
+.j-input-datetime-local:focus {
+  outline: none !important;
+  border-color: var(--jtf-primary) !important;
+  box-shadow: 0 0 0 3px var(--jtf-primary-light) !important;
+}
+
+/* Textarea Specific */
+.j-input-textarea {
+  min-height: 80px !important;
+  resize: vertical !important;
+}
+
+/* Checkbox & Radio */
+.j-input-checkbox,
+.j-input-radio {
+  width: auto !important;
+  margin-right: var(--jtf-space-2) !important;
+  cursor: pointer !important;
+}
+
+/* Select Dropdown */
+.j-input-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right var(--jtf-space-3) center !important;
+  background-repeat: no-repeat !important;
+  background-size: 16px 16px !important;
+  padding-right: 2.5rem !important;
+  cursor: pointer !important;
+}
+
+/* Buttons */
+.j-add-array-item,
+.j-remove-array-item,
+.j-ec {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: var(--jtf-space-1) var(--jtf-space-3) !important;
+  font-size: var(--jtf-text-xs) !important;
+  font-weight: 500 !important;
+  border: none !important;
+  border-radius: var(--jtf-radius-sm) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  text-decoration: none !important;
+  line-height: 1.5 !important;
+}
+
+.j-add-array-item {
+  background: var(--jtf-success) !important;
+  color: white !important;
+}
+
+.j-add-array-item:hover {
+  background: #15803d !important;
+  box-shadow: var(--jtf-shadow-sm) !important;
+}
+
+.j-remove-array-item {
+  background: var(--jtf-danger) !important;
+  color: white !important;
+}
+
+.j-remove-array-item:hover {
+  background: #b91c1c !important;
+  box-shadow: var(--jtf-shadow-sm) !important;
+}
+
+.j-ec {
+  background: var(--jtf-gray-100) !important;
+  color: var(--jtf-gray-600) !important;
+  border: 1px solid var(--jtf-gray-300) !important;
+}
+
+.j-ec:hover {
+  background: var(--jtf-gray-200) !important;
+  color: var(--jtf-gray-700) !important;
+}
+
+/* Help Text */
+.j-inline-help {
+  color: var(--jtf-gray-500) !important;
+  font-size: var(--jtf-text-xs) !important;
+  margin-top: var(--jtf-space-1) !important;
+  line-height: 1.4 !important;
+}
+
+.j-validation-help {
+  color: var(--jtf-warning) !important;
+  font-size: var(--jtf-text-xs) !important;
+  margin-top: var(--jtf-space-1) !important;
+  line-height: 1.4 !important;
+}
+
+.j-validation-message {
+  color: var(--jtf-danger) !important;
+  font-size: var(--jtf-text-xs) !important;
+  margin-top: var(--jtf-space-1) !important;
+  line-height: 1.4 !important;
+}
+
+.j-required-star {
+  color: var(--jtf-danger) !important;
+  font-weight: 600 !important;
+}
+
+/* Validation States */
+.j-input[data-is-valid="false"],
+.j-input-text[data-is-valid="false"],
+.j-input-textarea[data-is-valid="false"],
+.j-input-select[data-is-valid="false"] {
+  border-color: var(--jtf-danger) !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+.j-input[data-is-valid="true"],
+.j-input-text[data-is-valid="true"],
+.j-input-textarea[data-is-valid="true"],
+.j-input-select[data-is-valid="true"] {
+  border-color: var(--jtf-success) !important;
+}
+
+/* Table Layout Fixes */
+table.j-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .j-container {
+    padding: var(--jtf-space-4) !important;
+    font-size: var(--jtf-text-sm) !important;
+  }
+  
+  .j-title-col {
+    width: 120px !important;
+    min-width: 120px !important;
+  }
+  
+  .j-oject-title-row td,
+  .j-array-title-row td {
+    padding: var(--jtf-space-2) var(--jtf-space-3) !important;
+  }
+  
+  .j-oject-value-row td,
+  .j-array-value-row td {
+    padding: var(--jtf-space-2) var(--jtf-space-3) !important;
+  }
+}
+
+/* Utility Classes */
+.j-text-muted {
+  color: var(--jtf-gray-500) !important;
+}
+
+.j-border {
+  border: 1px solid var(--jtf-gray-200) !important;
+}
+
+.j-rounded {
+  border-radius: var(--jtf-radius) !important;
+}
+
+.j-shadow {
+  box-shadow: var(--jtf-shadow) !important;
+}

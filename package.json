@@ -1,0 +1,68 @@
+{
+  "name": "jsontoform",
+  "version": "2.0.0",
+  "description": "A modern jQuery plugin for converting JSON schemas to beautiful HTML forms with real-time validation",
+  "main": "jsonToForm/jsonToForm.v2.js",
+  "types": "src/types/jsonToForm.d.ts",
+  "scripts": {
+    "build": "node build/build.js",
+    "dev": "python -m http.server 8080",
+    "serve": "python -m http.server 8080",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/",
+    "format": "prettier --write src/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/jsonToForm.git"
+  },
+  "keywords": [
+    "json",
+    "form",
+    "jquery",
+    "schema",
+    "validation",
+    "ui",
+    "rtl",
+    "persian",
+    "farsi",
+    "typescript",
+    "css",
+    "responsive",
+    "modern"
+  ],
+  "author": "JsonToForm Contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/jsonToForm/issues"
+  },
+  "homepage": "https://github.com/yourusername/jsonToForm#readme",
+  "dependencies": {
+    "jquery": "^3.7.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5"
+  },
+  "peerDependencies": {
+    "jquery": ">=3.0.0"
+  },
+  "files": [
+    "jsonToForm/",
+    "src/",
+    "demo-*.html",
+    "README-v2.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not IE 11"
+  ],
+  "jsdelivr": "jsonToForm/jsonToForm.v2.js",
+  "unpkg": "jsonToForm/jsonToForm.v2.js"
+}
