@@ -135,6 +135,9 @@
 
         function addArrayItem(arrayContainer, needInitiations, itemIndex) {
             var tId = arrayContainer.attr("data-template-id");
+            if (!tId || !arrayTemplates[tId]) {
+                return;
+            }
             var htmlTemplate = arrayTemplates[tId]["htmlTemplate"];
             var dataTemplate = JSON.parse(JSON.stringify(arrayTemplates[tId]["dataTemplate"]));
             var dataPath = arrayContainer.parents("tr:first").next().find("td:first").attr("data-path");
@@ -321,13 +324,21 @@
                 if (schemaNode["items"] && schemaNode["items"]["enum"]) arrSchema["enum"] = schemaNode["items"]["enum"];
                 arrSchema["title"] = arrSchema["title"] + ' [$index$]';
                 itemContainerT = renderSimpleNode(arrSchema, "$index$");
-            }
-
-            if (arrType.startsWith("#")) {
+                itemDataTemplate = "";
+            } else if (arrType == "object") {
+                // Handle object arrays
+                if (schemaNode["items"]) {
+                    arrSchema = JSON.parse(JSON.stringify(schemaNode["items"]));
+                    arrSchema["title"] = fixNU(arrSchema["title"], "") + ' [$index$]';
+                    itemContainerT = renderSchemaNode(arrSchema, "$index$");
+                    itemDataTemplate = {};
+                }
+            } else if (arrType.startsWith("#")) {
                 var r = "['" + replaceAll(arrType.replace('#/', ""), '/', "']['") + "']";
                 arrSchema = JSON.parse(JSON.stringify(V(options["schema"], r)));
                 arrSchema["title"] = fixNU(arrSchema["title"], "") + ' [$index$]';
                 itemContainerT = renderSchemaNode(arrSchema, "$index$");
+                itemDataTemplate = {};
             }
             level--;
 
@@ -344,11 +355,12 @@
         }
 
         function getIdBasedDataPath(dataPath) {
+            if (!dataPath) return "";
             let n = replaceAll(dataPath, '][', '_');
-            n = n.replaceAll(n, '[', '');
-            n = n.replaceAll(n, ']', '');
-            n = n.replaceAll(n, '"', '');
-            n = n.replaceAll(n, "'", '');
+            n = replaceAll(n, '[', '');
+            n = replaceAll(n, ']', '');
+            n = replaceAll(n, '"', '');
+            n = replaceAll(n, "'", '');
             return renderPlace.attr("id") + "_" + n;
         }
 
@@ -406,16 +418,18 @@
             }
             arrayNodes.each(function () {
                 var addArrayItemBtn = $(this);
-                var dataPath = addArrayItemBtn.parents("tr:first").next("tr").find("td:first").attr("data-path");
-                if (dataPath === undefined) {
-                    var o = addArrayItemBtn.parents("tr:first").next("tr").find("td:first");
-                    o.attr("data-path", generatePath(o));
-                    dataPath = addArrayItemBtn.parents("tr:first").next("tr").find("td:first").attr("data-path");
+                var arrayContainerTd = addArrayItemBtn.parents("tr:first").next("tr").find("td:first");
+                var dataPath = arrayContainerTd.attr("data-path");
+                
+                if (!dataPath) {
+                    dataPath = generatePath(arrayContainerTd);
+                    arrayContainerTd.attr("data-path", dataPath);
                 }
-                var arr = null;
-                eval('arr = options["value"]' + dataPath + ';');
-                if (arr) {
-                    arr.forEach(function (item, index, arr) {
+                
+                var arr = V(options["value"], dataPath);
+                
+                if (arr && Array.isArray(arr)) {
+                    arr.forEach(function (item, index) {
                         addArrayItem(addArrayItemBtn, false, index);
                     });
                 }
@@ -464,6 +478,7 @@
         }
 
         function jsonEscape(str) {
+            if (!str) return "";
             return str.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t");
         }
 
@@ -503,6 +518,7 @@
         }
 
         function replaceAll(source, find, replace) {
+            if (!source) return "";
             var str = source;
             return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
         }
