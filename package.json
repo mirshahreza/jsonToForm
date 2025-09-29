@@ -51,7 +51,6 @@
     "jsonToForm/",
     "src/",
     "demo-*.html",
-    "README-v2.md",
     "CHANGELOG.md",
     "LICENSE"
   ],
