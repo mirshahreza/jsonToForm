@@ -140,7 +140,13 @@
             }
             var htmlTemplate = arrayTemplates[tId]["htmlTemplate"];
             var dataTemplate = JSON.parse(JSON.stringify(arrayTemplates[tId]["dataTemplate"]));
-            var dataPath = arrayContainer.parents("tr:first").next().find("td:first").attr("data-path");
+            var arrayBody = arrayContainer.closest(".j-array-container").find(".j-array-body");
+            var dataPath = arrayBody.attr("data-path");
+            if (!dataPath) {
+                dataPath = generatePath(arrayBody);
+                arrayBody.attr("data-path", dataPath);
+            }
+            
             if (V(options["value"], dataPath) == undefined || V(options["value"], dataPath) == null) {
                 eval('options["value"]' + dataPath + "=[];");
             }
@@ -153,7 +159,9 @@
             }
 
             htmlTemplate = replaceAll(htmlTemplate, "$index$", itemIndex);
-            arrayContainer.parents("tr:first").next().find("td:first").append(htmlTemplate);
+            // Wrap in array item div
+            htmlTemplate = '<div class="j-array-item">' + htmlTemplate + '</div>';
+            arrayBody.append(htmlTemplate);
 
             if (needInitiations) {
                 initValuePathes();
@@ -189,10 +197,10 @@
         }
 
         function renderSimpleNode(schemaNode, schemaName, isRequired) {
-            let ContainerT = '<table $hover-hint$ class="j-container"><tr class="j-oject-value-row">$$$</tr></table>';
-            let TitleT = '<td class="j-title-col">$$$</td><td class="j-sep-col"></td>';
-            let BodyT = '<td class="j-body-col">$$$</td>';
-            let ActionT = '<td class="j-action-col">$$$</td>';
+            let ContainerT = '<div $hover-hint$ class="j-container"><div class="j-field-row">$$$</div></div>';
+            let TitleT = '<div class="j-label-col">$$$</div>';
+            let BodyT = '<div class="j-input-col">$$$</div>';
+            let ActionT = '<div class="j-action-col">$$$</div>';
             let requiredAtt = "", requiredStar = "", inputBody = "", classAtt = "";
             let additionalClass = " " + getUISetting(schemaNode, "class", "");
             let nodeType = fixNU(schemaNode["type"], "string");
@@ -279,19 +287,18 @@
         }
 
         function renderObjectNode(schemaNode, schemaName) {
-            var ContainerT = '<table class="j-container">$$$</table>';
-            var TitleT = '<tr class="j-oject-title-row"><td class="j-title-col">$$$</td><td class="j-sep-col"></td><td class="j-body-col">$inlinehint$</td><td class="j-action-col"></td></tr>';
+            var ContainerT = '<div class="j-object-container" data-value-name="' + schemaName + '">$$$</div>';
             var childClass = ((options["expandingLevel"] != -1 && level + 1 > options["expandingLevel"]) ? "j-collapsed" : "");
             var ecBtn = (childClass == "j-collapsed" ? "e" : "c");
             var properties = Object.keys(schemaNode["properties"]);
             var inlineHint = getUISetting(schemaNode, "inlineHint", "");
             if (inlineHint != "") inlineHint = '<span class="j-inline-help">' + inlineHint + '</span>';
-            TitleT = TitleT.replace("$inlinehint$", inlineHint);
-            var temp = "";
-
-            var BodyT = '<tr class="' + childClass + '"><td colspan="3" data-value-name="' + schemaName + '">$$$</td></tr>';
-            TitleT = TitleT.replace("$$$", getSpacer(level) + getEC(ecBtn) + getTitle(schemaNode, schemaName));
+            
+            var TitleT = '<div class="j-object-header">' + getSpacer(level) + getEC(ecBtn) + getTitle(schemaNode, schemaName) + inlineHint + '</div>';
+            var BodyT = '<div class="j-object-body ' + childClass + '">$$$</div>';
+            
             TitleT = (options["renderFirstLevel"] == "false" && level == 0 ? "" : TitleT);
+            var temp = "";
 
             level = level + 1;
             properties.forEach(function (item, index, arr) {
@@ -302,17 +309,17 @@
         }
 
         function renderArrayNode(schemaNode, schemaName) {
-            var ContainerT = '<table class="j-container">$$$</table>';
-            var TitleT = '<tr class="j-array-title-row"><td class="j-title-col">$$$</td><td class="j-sep-col"></td><td class="j-body-col">$inlinehint$</td><td class="j-action-col">$ArrTools$</td></tr>';
+            var ContainerT = '<div class="j-array-container" data-value-name="' + schemaName + '">$$$</div>';
             var childClass = ((options["expandingLevel"] != -1 && level + 1 > options["expandingLevel"]) ? "j-collapsed" : "");
             var ecBtn = (childClass == "j-collapsed" ? "e" : "c");
             var itemTemplateId = schemaName + "_" + level;
-            var BodyT = '<tr class="' + childClass + '"><td colspan="4" data-value-name="' + schemaName + '" class="j-array-items">$$$</td></tr>';
             var inlineHint = getUISetting(schemaNode, "inlineHint", "");
             if (inlineHint != "") inlineHint = '<div class="j-inline-help">' + inlineHint + '</div>';
-            TitleT = TitleT.replace("$$$", getSpacer(level) + getEC(ecBtn) + getTitle(schemaNode, schemaName));
-            TitleT = TitleT.replace("$ArrTools$", '<span class="j-add-array-item" data-array-loaded="false" data-template-id="' + itemTemplateId + '" title="افزودن آیتم جدید">[+]</span>');
-            TitleT = TitleT.replace("$inlinehint$", inlineHint);
+            
+            var TitleT = '<div class="j-array-header">' + getSpacer(level) + getEC(ecBtn) + getTitle(schemaNode, schemaName) + 
+                         '<span class="j-add-array-item" data-array-loaded="false" data-template-id="' + itemTemplateId + '" title="افزودن آیتم جدید">+</span>' + 
+                         inlineHint + '</div>';
+            var BodyT = '<div class="j-array-body ' + childClass + '">$$$</div>';
 
             var arrType = getArrayType(schemaNode);
             var itemDataTemplate = null, itemContainerT = null;
@@ -418,12 +425,13 @@
             }
             arrayNodes.each(function () {
                 var addArrayItemBtn = $(this);
-                var arrayContainerTd = addArrayItemBtn.parents("tr:first").next("tr").find("td:first");
-                var dataPath = arrayContainerTd.attr("data-path");
+                var arrayContainer = addArrayItemBtn.closest(".j-array-container");
+                var arrayBody = arrayContainer.find(".j-array-body");
+                var dataPath = arrayBody.attr("data-path");
                 
                 if (!dataPath) {
-                    dataPath = generatePath(arrayContainerTd);
-                    arrayContainerTd.attr("data-path", dataPath);
+                    dataPath = generatePath(arrayBody);
+                    arrayBody.attr("data-path", dataPath);
                 }
                 
                 var arr = V(options["value"], dataPath);
