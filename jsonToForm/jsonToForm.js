@@ -189,6 +189,7 @@
             let ContainerT = '<table $hover-hint$ class="j-container"><tr class="j-oject-value-row">$$$</tr></table>';
             let TitleT = '<td class="j-title-col">$$$</td><td class="j-sep-col"></td>';
             let BodyT = '<td class="j-body-col">$$$</td>';
+            let ActionT = '<td class="j-action-col">$$$</td>';
             let requiredAtt = "", requiredStar = "", inputBody = "", classAtt = "";
             let additionalClass = " " + getUISetting(schemaNode, "class", "");
             let nodeType = fixNU(schemaNode["type"], "string");
@@ -263,12 +264,20 @@
 
             BodyT = BodyT.replace("$$$", inputBody + validationHint + inlineHint);
             TitleT = TitleT.replace("$$$", getSpacer(level) + getEC('') + getTitle(schemaNode, schemaName) + requiredStar);
-            return ContainerT.replace("$$$", TitleT + BodyT).replace("$hover-hint$", hoverHint);
+            
+            // اضافه کردن ستون action برای array items
+            let actionContent = "";
+            if (schemaName === "$index$") {
+                actionContent = '<span class="j-remove-array-item" data-index="$index$" title="حذف این آیتم">×</span>';
+            }
+            ActionT = ActionT.replace("$$$", actionContent);
+            
+            return ContainerT.replace("$$$", TitleT + BodyT + ActionT).replace("$hover-hint$", hoverHint);
         }
 
         function renderObjectNode(schemaNode, schemaName) {
             var ContainerT = '<table class="j-container">$$$</table>';
-            var TitleT = '<tr class="j-oject-title-row"><td class="j-title-col">$$$</td><td class="j-sep-col"></td><td class="j-body-col">$inlinehint$</td></tr>';
+            var TitleT = '<tr class="j-oject-title-row"><td class="j-title-col">$$$</td><td class="j-sep-col"></td><td class="j-body-col">$inlinehint$</td><td class="j-action-col"></td></tr>';
             var childClass = ((options["expandingLevel"] != -1 && level + 1 > options["expandingLevel"]) ? "j-collapsed" : "");
             var ecBtn = (childClass == "j-collapsed" ? "e" : "c");
             var properties = Object.keys(schemaNode["properties"]);
@@ -291,15 +300,15 @@
 
         function renderArrayNode(schemaNode, schemaName) {
             var ContainerT = '<table class="j-container">$$$</table>';
-            var TitleT = '<tr class="j-array-title-row"><td class="j-title-col">$$$&nbsp;$ArrTools$</td><td class="j-sep-col"></td><td class="j-body-col">$inlinehint$</td></tr>';
+            var TitleT = '<tr class="j-array-title-row"><td class="j-title-col">$$$</td><td class="j-sep-col"></td><td class="j-body-col">$inlinehint$</td><td class="j-action-col">$ArrTools$</td></tr>';
             var childClass = ((options["expandingLevel"] != -1 && level + 1 > options["expandingLevel"]) ? "j-collapsed" : "");
             var ecBtn = (childClass == "j-collapsed" ? "e" : "c");
             var itemTemplateId = schemaName + "_" + level;
-            var BodyT = '<tr class="' + childClass + '"><td colspan="3" data-value-name="' + schemaName + '" class="j-array-items">$$$</td></tr>';
+            var BodyT = '<tr class="' + childClass + '"><td colspan="4" data-value-name="' + schemaName + '" class="j-array-items">$$$</td></tr>';
             var inlineHint = getUISetting(schemaNode, "inlineHint", "");
             if (inlineHint != "") inlineHint = '<div class="j-inline-help">' + inlineHint + '</div>';
             TitleT = TitleT.replace("$$$", getSpacer(level) + getEC(ecBtn) + getTitle(schemaNode, schemaName));
-            TitleT = TitleT.replace("$ArrTools$", '<span class="j-add-array-item" data-array-loaded="false" data-template-id="' + itemTemplateId + '">[+]</span>');
+            TitleT = TitleT.replace("$ArrTools$", '<span class="j-add-array-item" data-array-loaded="false" data-template-id="' + itemTemplateId + '" title="افزودن آیتم جدید">[+]</span>');
             TitleT = TitleT.replace("$inlinehint$", inlineHint);
 
             var arrType = getArrayType(schemaNode);
@@ -310,14 +319,14 @@
             if (arrType == "string" || arrType == "number" || arrType == "boolean" || arrType == "email" || arrType == "tel") {
                 if (schemaNode["items"] && schemaNode["items"]["ui"]) arrSchema["ui"] = schemaNode["items"]["ui"];
                 if (schemaNode["items"] && schemaNode["items"]["enum"]) arrSchema["enum"] = schemaNode["items"]["enum"];
-                arrSchema["title"] = arrSchema["title"] + ' [$index$] <span class="j-remove-array-item" data-index="$index$"> X </span>';
+                arrSchema["title"] = arrSchema["title"] + ' [$index$]';
                 itemContainerT = renderSimpleNode(arrSchema, "$index$");
             }
 
             if (arrType.startsWith("#")) {
                 var r = "['" + replaceAll(arrType.replace('#/', ""), '/', "']['") + "']";
                 arrSchema = JSON.parse(JSON.stringify(V(options["schema"], r)));
-                arrSchema["title"] = fixNU(arrSchema["title"], "") + ' [$index$] <span class="j-remove-array-item" data-index="$index$"> X </span>';
+                arrSchema["title"] = fixNU(arrSchema["title"], "") + ' [$index$]';
                 itemContainerT = renderSchemaNode(arrSchema, "$index$");
             }
             level--;

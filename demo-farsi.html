@@ -257,7 +257,7 @@
         .j-container:not(:has(.j-container)) .j-array-title-row td {
             background: transparent !important;
             padding: 12px 16px !important;
-            border-bottom: 1px solid #e9ecef !important;
+            border-bottom: none !important;
         }
         
         /* Form Fields - Clean Layout (NO INTERNAL BORDERS) */
@@ -265,6 +265,17 @@
             padding: 10px 16px !important;
             vertical-align: middle !important;
             border: none !important;
+        }
+        
+        /* بهبود layout برای input ها */
+        .j-body-col .j-input-text,
+        .j-body-col .j-input-number,
+        .j-body-col .j-input-email,
+        .j-body-col .j-input-tel,
+        .j-body-col select {
+            display: block !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
         
         /* Subtle row hover effect instead of borders */
@@ -300,28 +311,45 @@
             background: transparent !important;
         }
         
+        /* Action column for buttons */
+        .j-action-col {
+            width: 40px !important;
+            min-width: 40px !important;
+            max-width: 40px !important;
+            padding: 8px 4px !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            background: transparent !important;
+        }
+        
+        /* همه دکمه‌ها در ستون action - تراز عمودی */
+        .j-action-col .j-add-array-item,
+        .j-action-col .j-remove-array-item {
+            display: block !important;
+            margin: 2px auto !important;
+            position: relative !important;
+        }
+        
+        /* حذف شد - خط عمودی اضافی */
+        
         /* ===== HIERARCHICAL INDENTATION SYSTEM ===== */
         
         /* Subtle indentation based on nesting level */
         .j-container .j-container {
             margin-right: 12px !important;
-            border-right: 2px solid #f1f5f9 !important;
             padding-right: 8px !important;
         }
         
         .j-container .j-container .j-container {
             margin-right: 24px !important;
-            border-right: 2px solid #e2e8f0 !important;
         }
         
         .j-container .j-container .j-container .j-container {
             margin-right: 36px !important;
-            border-right: 1px solid #cbd5e1 !important;
         }
         
         .j-container .j-container .j-container .j-container .j-container {
             margin-right: 48px !important;
-            border-right: 1px solid #94a3b8 !important;
         }
         
         /* Headers for nested containers - cleaner styling */
@@ -331,7 +359,7 @@
             font-weight: 500 !important;
             color: #64748b !important;
             padding: 6px 0 4px 0 !important;
-            border-bottom: 1px solid #f1f5f9 !important;
+            border-bottom: none !important;
         }
         
         .j-container .j-container .j-container .j-oject-title-row td,
@@ -340,7 +368,7 @@
             font-weight: 500 !important;
             color: #74788d !important;
             padding: 5px 0 3px 0 !important;
-            border-bottom: 1px solid #e9ecef !important;
+            border-bottom: none !important;
         }
         
         .j-container .j-container .j-container .j-container .j-oject-title-row td,
@@ -440,34 +468,57 @@
         
         /* ===== MODERN BUTTONS - CLEAN DESIGN ===== */
         .j-add-array-item,
-        .j-remove-array-item,
-        .j-ec {
+        .j-remove-array-item {
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
             padding: 0 !important;
-            width: 24px !important;
-            height: 24px !important;
-            border: none !important;
-            border-radius: 4px !important;
+            width: 20px !important;
+            height: 20px !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            border-radius: 50% !important;
             cursor: pointer !important;
-            transition: all 0.2s ease !important;
+            transition: all 0.25s ease !important;
             margin: 0 2px !important;
             text-decoration: none !important;
             vertical-align: middle !important;
             box-sizing: border-box !important;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-            font-size: 12px !important;
+            font-size: 11px !important;
             font-weight: 500 !important;
             line-height: 1 !important;
             position: relative !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+        }
+
+        .j-ec {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            width: 18px !important;
+            height: 18px !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            border-radius: 3px !important;
+            cursor: pointer !important;
+            transition: all 0.25s ease !important;
+            margin: 0 2px !important;
+            text-decoration: none !important;
+            vertical-align: middle !important;
+            box-sizing: border-box !important;
+            font-family: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace !important;
+            font-size: 10px !important;
+            font-weight: 600 !important;
+            line-height: 1 !important;
+            position: relative !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
         }
         
-        /* Add Button - Modern Green */
+        /* Add Button - Hollow Blue Circle */
         .j-add-array-item {
-            background: #10b981 !important;
-            color: white !important;
-            font-size: 0 !important;
+            background: transparent !important;
+            border: 2px solid #3b82f6 !important;
+            color: #3b82f6 !important;
         }
         
         .j-add-array-item:before {
@@ -481,26 +532,28 @@
         }
         
         .j-add-array-item:hover {
-            background: #059669 !important;
-            transform: scale(1.05) !important;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
+            background: #3b82f6 !important;
+            color: white !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35) !important;
+            border-color: #3b82f6 !important;
         }
         
         .j-add-array-item:active {
-            transform: scale(0.95) !important;
-            box-shadow: 0 1px 4px rgba(16, 185, 129, 0.4) !important;
+            transform: translateY(0px) !important;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4) !important;
         }
         
-        /* Remove Button - Modern Red */
+        /* Remove Button - Hollow Red Circle */
         .j-remove-array-item {
-            background: #ef4444 !important;
-            color: white !important;
-            font-size: 0 !important;
+            background: transparent !important;
+            border: 2px solid #ef4444 !important;
+            color: #ef4444 !important;
         }
         
         .j-remove-array-item:before {
             content: "×" !important;
-            font-size: 16px !important;
+            font-size: 14px !important;
             font-weight: 400 !important;
             line-height: 1 !important;
             position: absolute !important;
@@ -510,14 +563,16 @@
         }
         
         .j-remove-array-item:hover {
-            background: #dc2626 !important;
-            transform: scale(1.05) !important;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3) !important;
+            background: #ef4444 !important;
+            color: white !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35) !important;
+            border-color: #ef4444 !important;
         }
         
         .j-remove-array-item:active {
-            transform: scale(0.95) !important;
-            box-shadow: 0 1px 4px rgba(239, 68, 68, 0.4) !important;
+            transform: translateY(0px) !important;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4) !important;
         }
         
         /* Expand/Collapse Button - Modern Gray */
@@ -1115,6 +1170,8 @@
                 }).remove();
             });
         }
+
+        // حذف شد - دکمه‌ها حالا در ساختار HTML قرار دارند
 
         // بارگذاری اولیه
         $(document).ready(function() {
