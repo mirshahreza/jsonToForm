@@ -11,7 +11,7 @@
     <!-- JsonToForm Original -->
     <script src="jsonToForm/jsonToForm.js"></script>
     <link href="jsonToForm/jsonToForm.css" rel="stylesheet" type="text/css" />
-    <link href="src/styles/jsonToForm.clean.css" rel="stylesheet" type="text/css" />
+    <link href="src/styles/jsonToForm.telerik.css" rel="stylesheet" type="text/css" />
     
     <style>
         body {
@@ -86,43 +86,61 @@
         }
         
         .btn {
-            padding: 10px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
             font-size: 14px;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            min-height: 38px;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
         }
         
         .btn-primary {
-            background: #4f46e5;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
             color: white;
-            border: 1px solid #4f46e5;
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
         }
         
         .btn-primary:hover {
-            background: #4338ca;
-            border-color: #4338ca;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.2);
+            background: linear-gradient(135deg, #4338ca, #4f46e5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
         }
         
         .btn-secondary {
-            background: white;
-            color: #64748b;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            color: #475569;
             border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         
         .btn-secondary:hover {
-            background: #f1f5f9;
-            border-color: #cbd5e1;
-            transform: translateY(-1px);
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            transform: translateY(-2px);
         }
         
         .output-section {
@@ -171,94 +189,397 @@
             border: 1px solid #fecaca;
         }
         
-        /* سایه و حاشیه‌های اضافی برای بهتر دیده شدن */
+        /* ===== CLEAN MODERN UI - MINIMAL BORDERS ===== */
+        
+        /* Container - Hierarchical Design */
         .j-container {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
-            margin-bottom: 16px !important;
+            border: none !important;
+            border-radius: 0 !important;
+            margin-bottom: 8px !important;
+            background: transparent !important;
+            box-shadow: none !important;
         }
         
-        /* بهبود ظاهر فرم */
+        /* Leaf containers styling - fallback for browsers without :has() */
+        .j-container {
+            border: 1px solid #e9ecef !important;
+            border-radius: 4px !important;
+            background: #ffffff !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+            margin-bottom: 8px !important;
+        }
+        
+        /* Remove styling from parent containers */
+        .j-container:has(.j-container) {
+            border: none !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        
+        /* Fix for nested container margins */
+        .j-container .j-container {
+            margin-bottom: 6px !important;
+        }
+        
         .j-container table {
             width: 100% !important;
             border-collapse: collapse !important;
+            border-spacing: 0 !important;
         }
         
+        /* Object Headers - Hierarchical Styling */
         .j-oject-title-row,
         .j-array-title-row {
-            background: #f8fafc !important;
+            background: transparent !important;
+            border: none !important;
         }
         
         .j-oject-title-row td,
         .j-array-title-row td {
-            background: #f8fafc !important;
-            color: #334155 !important;
-            font-weight: 500 !important;
+            background: transparent !important;
+            color: #495057 !important;
+            font-weight: 600 !important;
             font-size: 14px !important;
-            padding: 12px 16px !important;
-            border-bottom: 1px solid #e2e8f0 !important;
+            padding: 8px 0 4px 0 !important;
+            border: none !important;
+            border-bottom: 2px solid #e9ecef !important;
+            margin-bottom: 8px !important;
         }
         
+        /* Leaf container headers get background */
+        .j-container:not(:has(.j-container)) .j-oject-title-row,
+        .j-container:not(:has(.j-container)) .j-array-title-row {
+            background: #f8f9fa !important;
+        }
+        
+        .j-container:not(:has(.j-container)) .j-oject-title-row td,
+        .j-container:not(:has(.j-container)) .j-array-title-row td {
+            background: transparent !important;
+            padding: 12px 16px !important;
+            border-bottom: 1px solid #e9ecef !important;
+        }
+        
+        /* Form Fields - Clean Layout (NO INTERNAL BORDERS) */
         .j-oject-value-row td {
-            padding: 12px 16px !important;
-            vertical-align: top !important;
+            padding: 10px 16px !important;
+            vertical-align: middle !important;
+            border: none !important;
         }
         
+        /* Subtle row hover effect instead of borders */
+        .j-oject-value-row:hover {
+            background: rgba(0,123,255,0.03) !important;
+        }
+        
+        /* Alternating row background */
+        .j-oject-value-row:nth-child(even) {
+            background: rgba(248,249,250,0.4) !important;
+        }
+        
+        /* Labels - Clean & Minimal */
+        .j-title-col {
+            width: 140px !important;
+            min-width: 140px !important;
+            background: transparent !important;
+            border: none !important;
+            font-weight: 500 !important;
+            font-size: 13px !important;
+            color: #6c757d !important;
+            text-align: right !important;
+            padding-right: 12px !important;
+        }
+        
+        /* Remove separator column completely */
+        .j-sep-col {
+            display: none !important;
+        }
+        
+        .j-body-col {
+            padding-left: 12px !important;
+            background: transparent !important;
+        }
+        
+        /* ===== HIERARCHICAL INDENTATION SYSTEM ===== */
+        
+        /* Subtle indentation based on nesting level */
+        .j-container .j-container {
+            margin-right: 12px !important;
+            border-right: 2px solid #f1f5f9 !important;
+            padding-right: 8px !important;
+        }
+        
+        .j-container .j-container .j-container {
+            margin-right: 24px !important;
+            border-right: 2px solid #e2e8f0 !important;
+        }
+        
+        .j-container .j-container .j-container .j-container {
+            margin-right: 36px !important;
+            border-right: 1px solid #cbd5e1 !important;
+        }
+        
+        .j-container .j-container .j-container .j-container .j-container {
+            margin-right: 48px !important;
+            border-right: 1px solid #94a3b8 !important;
+        }
+        
+        /* Headers for nested containers - cleaner styling */
+        .j-container .j-container .j-oject-title-row td,
+        .j-container .j-container .j-array-title-row td {
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            color: #64748b !important;
+            padding: 6px 0 4px 0 !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+        }
+        
+        .j-container .j-container .j-container .j-oject-title-row td,
+        .j-container .j-container .j-container .j-array-title-row td {
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            color: #74788d !important;
+            padding: 5px 0 3px 0 !important;
+            border-bottom: 1px solid #e9ecef !important;
+        }
+        
+        .j-container .j-container .j-container .j-container .j-oject-title-row td,
+        .j-container .j-container .j-container .j-container .j-array-title-row td {
+            font-size: 11px !important;
+            font-weight: 400 !important;
+            color: #8a8fa3 !important;
+            padding: 4px 0 2px 0 !important;
+            border-bottom: none !important;
+        }
+        
+        /* Consistent spacing for all levels */
+        .j-container .j-container .j-oject-value-row td {
+            padding: 8px 12px !important;
+        }
+        
+        .j-container .j-container .j-container .j-oject-value-row td {
+            padding: 6px 10px !important;
+        }
+        
+        .j-container .j-container .j-container .j-container .j-oject-value-row td {
+            padding: 6px 8px !important;
+        }
+        
+        /* Fix RTL label alignment for nested containers */
+        .j-container .j-container .j-title-col {
+            width: 120px !important;
+            min-width: 120px !important;
+        }
+        
+        .j-container .j-container .j-container .j-title-col {
+            width: 100px !important;
+            min-width: 100px !important;
+        }
+        
+        /* Input Controls - Modern Telerik Style */
         .j-input-text,
         .j-input-select,
         .j-input-textarea,
         .j-input-number,
         .j-input-email,
         .j-input-tel,
-        .j-input-date {
-            border: 1px solid #d1d5db !important;
-            border-radius: 6px !important;
-            padding: 8px 12px !important;
-            font-size: 14px !important;
-            transition: all 0.2s ease !important;
-            background: white !important;
+        .j-input-date,
+        .j-input-time {
+            border: 1px solid #c5c5c5 !important;
+            border-radius: 2px !important;
+            padding: 4px 6px !important;
+            font-size: 13px !important;
+            height: 24px !important;
+            line-height: 16px !important;
+            transition: all 0.15s ease !important;
+            background: #fff !important;
             width: 100% !important;
             box-sizing: border-box !important;
         }
         
+        .j-input-textarea {
+            height: auto !important;
+            min-height: 48px !important;
+            resize: vertical !important;
+            padding: 6px !important;
+        }
+        
+        /* Focus States - Telerik Blue */
         .j-input-text:focus,
         .j-input-select:focus,
         .j-input-textarea:focus,
         .j-input-number:focus,
         .j-input-email:focus,
         .j-input-tel:focus,
-        .j-input-date:focus {
+        .j-input-date:focus,
+        .j-input-time:focus {
             outline: none !important;
-            border-color: #4f46e5 !important;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+            border-color: #4a90e2 !important;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 0 3px rgba(74,144,226,0.3) !important;
+            background: #fefefe !important;
         }
         
+        /* Radio & Checkbox - Inline Layout */
+        .j-input-radio,
+        .j-input-checkbox {
+            width: auto !important;
+            height: auto !important;
+            margin-left: 6px !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Select Dropdown Enhancement */
+        .j-input-select {
+            cursor: pointer !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23666' d='M4 6l4 4 4-4z'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: calc(100% - 8px) center !important;
+            background-size: 12px !important;
+            padding-right: 24px !important;
+        }
+        
+        /* ===== MODERN BUTTONS - CLEAN DESIGN ===== */
         .j-add-array-item,
-        .j-remove-array-item {
-            padding: 6px 12px !important;
-            font-size: 12px !important;
-            border-radius: 4px !important;
+        .j-remove-array-item,
+        .j-ec {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            width: 24px !important;
+            height: 24px !important;
             border: none !important;
+            border-radius: 4px !important;
             cursor: pointer !important;
             transition: all 0.2s ease !important;
-            margin: 2px !important;
+            margin: 0 2px !important;
+            text-decoration: none !important;
+            vertical-align: middle !important;
+            box-sizing: border-box !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            line-height: 1 !important;
+            position: relative !important;
         }
         
+        /* Add Button - Modern Green */
         .j-add-array-item {
-            background: #16a34a !important;
+            background: #10b981 !important;
             color: white !important;
+            font-size: 0 !important;
+        }
+        
+        .j-add-array-item:before {
+            content: "+" !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            position: absolute !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
         }
         
         .j-add-array-item:hover {
-            background: #15803d !important;
+            background: #059669 !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
         }
         
+        .j-add-array-item:active {
+            transform: scale(0.95) !important;
+            box-shadow: 0 1px 4px rgba(16, 185, 129, 0.4) !important;
+        }
+        
+        /* Remove Button - Modern Red */
         .j-remove-array-item {
-            background: #dc2626 !important;
+            background: #ef4444 !important;
             color: white !important;
+            font-size: 0 !important;
+        }
+        
+        .j-remove-array-item:before {
+            content: "×" !important;
+            font-size: 16px !important;
+            font-weight: 400 !important;
+            line-height: 1 !important;
+            position: absolute !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
         }
         
         .j-remove-array-item:hover {
-            background: #b91c1c !important;
+            background: #dc2626 !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3) !important;
+        }
+        
+        .j-remove-array-item:active {
+            transform: scale(0.95) !important;
+            box-shadow: 0 1px 4px rgba(239, 68, 68, 0.4) !important;
+        }
+        
+        /* Expand/Collapse Button - Modern Gray */
+        .j-ec {
+            background: #6b7280 !important;
+            color: white !important;
+            font-family: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace !important;
+            font-weight: 600 !important;
+        }
+        
+        .j-ec:hover {
+            background: #4b5563 !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 2px 6px rgba(107, 114, 128, 0.3) !important;
+        }
+        
+        .j-ec:active {
+            transform: scale(0.95) !important;
+        }
+        
+        /* ===== VALIDATION & HINTS ===== */
+        .j-inline-help {
+            color: #999 !important;
+            font-size: 11px !important;
+            font-style: italic !important;
+            margin-top: 2px !important;
+            line-height: 1.3 !important;
+        }
+        
+        .j-validation-help {
+            color: #f0ad4e !important;
+            font-size: 11px !important;
+            margin-top: 2px !important;
+            line-height: 1.3 !important;
+        }
+        
+        .j-required-star {
+            color: #d9534f !important;
+            font-weight: bold !important;
+        }
+        
+        /* ===== SPACING OPTIMIZATION ===== */
+        
+        /* Reduce vertical spacing between containers */
+        .j-container + .j-container {
+            margin-top: -1px !important;
+        }
+        
+        /* Compact array items */
+        .j-array-item {
+            margin-bottom: 2px !important;
+        }
+        
+        /* Tighter row spacing */
+        .j-oject-value-row:last-child td {
+            border-bottom: none !important;
+        }
+        
+        /* Button container optimization */
+        td:has(.j-add-array-item, .j-remove-array-item) {
+            white-space: nowrap !important;
+            width: 1% !important;
         }
         
         @media (max-width: 768px) {
@@ -783,9 +1104,38 @@
             }, 3000);
         }
 
+        // پاک کردن محتوای اضافی دکمه‌ها
+        function cleanButtonContent() {
+            // حذف محتوای اصلی دکمه‌ها و تنها نگهداری آیکون CSS
+            $('.j-add-array-item, .j-remove-array-item').each(function() {
+                const $btn = $(this);
+                // حفظ attributes و events اما پاک کردن text content
+                $btn.contents().filter(function() {
+                    return this.nodeType === 3; // Text nodes
+                }).remove();
+            });
+        }
+
         // بارگذاری اولیه
         $(document).ready(function() {
             loadPersonalData();
+            
+            // پاک کردن محتوای دکمه‌ها بعد از لود
+            setTimeout(cleanButtonContent, 1000);
+            
+            // نظارت بر تغییرات DOM برای دکمه‌های جدید
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        cleanButtonContent();
+                    }
+                });
+            });
+            
+            observer.observe(document.getElementById('jsonEditor'), {
+                childList: true,
+                subtree: true
+            });
         });
     </script>
 </body>

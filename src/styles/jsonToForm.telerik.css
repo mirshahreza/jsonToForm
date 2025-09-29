@@ -1,0 +1,324 @@
+/* JsonToForm - Clean Modern Style (Minimal Borders) */
+
+/* Reset unwanted original styles */
+.j-container td {
+    padding: 0 !important;
+}
+
+/* Hierarchical Container System - No Parent Borders */
+.j-container {
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif !important;
+    font-size: 12px !important;
+    border: none !important;
+    background: transparent !important;
+    margin-bottom: 6px !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Only leaf containers (no nested containers) get visual styling */
+.j-container:not(:has(.j-container)) {
+    border: 1px solid #e9ecef !important;
+    background: white !important;
+    border-radius: 4px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+    margin-bottom: 8px !important;
+}
+
+/* Object/Array Headers - Subtle Background */
+.j-oject-title-row td,
+.j-array-title-row td {
+    background: #f8f9fa !important;
+    border-bottom: 1px solid #e9ecef !important;
+    padding: 8px 12px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    color: #495057 !important;
+}
+
+/* Form Row Layout - No Internal Borders */
+.j-oject-value-row td {
+    border: none !important;
+    padding: 6px !important;
+}
+
+/* Remove row separators - use spacing instead */
+.j-oject-value-row:nth-child(even) {
+    background: rgba(248,249,250,0.3) !important;
+}
+
+.j-title-col {
+    background: transparent !important;
+    border: none !important;
+    padding: 8px 12px 8px 8px !important;
+    font-weight: 500 !important;
+    color: #6c757d !important;
+    vertical-align: middle !important;
+    text-align: right !important;
+    width: 140px !important;
+    min-width: 140px !important;
+    white-space: nowrap !important;
+}
+
+/* Remove separator column completely */
+.j-sep-col {
+    display: none !important;
+}
+
+.j-body-col {
+    padding: 8px 12px !important;
+    vertical-align: middle !important;
+}
+
+/* Input Controls - Clean & Modern */
+input.j-input-text,
+input.j-input-number,
+input.j-input-email,
+input.j-input-tel,
+input.j-input-date,
+input.j-input-time,
+select.j-input-select,
+textarea.j-input-textarea {
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    padding: 6px 8px !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    line-height: 1.4 !important;
+    background: white !important;
+    transition: all 0.15s ease !important;
+}
+
+textarea.j-input-textarea {
+    height: auto !important;
+    min-height: 60px !important;
+    padding: 8px !important;
+    line-height: 1.5 !important;
+}
+
+/* Focus Enhancement - Subtle */
+input.j-input-text:focus,
+input.j-input-number:focus,
+input.j-input-email:focus,
+input.j-input-tel:focus,
+input.j-input-date:focus,
+input.j-input-time:focus,
+select.j-input-select:focus,
+textarea.j-input-textarea:focus {
+    border-color: #80bdff !important;
+    outline: none !important;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25) !important;
+}
+
+/* Modern Icon Buttons - Consistent Design */
+button.j-add-array-item,
+button.j-remove-array-item,
+.j-ec {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0 !important;
+    margin: 0 1px !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    vertical-align: middle !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+}
+
+/* Add Button - Success Green with Plus Icon */
+button.j-add-array-item {
+    background: #10b981 !important;
+    color: white !important;
+}
+
+/* Hide original text content */
+button.j-add-array-item {
+    font-size: 0 !important;
+    text-indent: -9999px !important;
+    overflow: hidden !important;
+}
+
+button.j-add-array-item::before {
+    content: "+" !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    text-indent: 0 !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+button.j-add-array-item:hover {
+    background: #059669 !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+}
+
+button.j-add-array-item:active {
+    transform: scale(0.9) !important;
+}
+
+/* Remove Button - Danger Red with X Icon */
+button.j-remove-array-item {
+    background: #ef4444 !important;
+    color: white !important;
+}
+
+/* Hide original text content */
+button.j-remove-array-item {
+    font-size: 0 !important;
+    text-indent: -9999px !important;
+    overflow: hidden !important;
+}
+
+button.j-remove-array-item::before {
+    content: "×" !important;
+    font-size: 16px !important;
+    font-weight: 300 !important;
+    line-height: 1 !important;
+    text-indent: 0 !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+button.j-remove-array-item:hover {
+    background: #dc2626 !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
+}
+
+button.j-remove-array-item:active {
+    transform: scale(0.9) !important;
+}
+
+/* Expand/Collapse Button - Neutral Gray */
+.j-ec {
+    background: #6b7280 !important;
+    color: white !important;
+    font-family: ui-monospace, SFMono-Regular, monospace !important;
+    font-weight: 700 !important;
+    font-size: 10px !important;
+}
+
+.j-ec:hover {
+    background: #4b5563 !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 3px 8px rgba(107, 114, 128, 0.3) !important;
+}
+
+.j-ec:active {
+    transform: scale(0.9) !important;
+}
+
+/* Spacing Optimization - Clean Layout */
+.j-container {
+    margin-bottom: 8px !important;
+}
+
+.j-container:first-child {
+    margin-top: 0 !important;
+}
+
+/* Remove all internal borders for cleaner look */
+.j-container table {
+    border-spacing: 0 !important;
+    border-collapse: collapse !important;
+}
+
+.j-container tr {
+    border: none !important;
+}
+
+.j-container td {
+    border: none !important;
+}
+
+/* Use subtle background alternation instead of borders */
+.j-oject-value-row:hover {
+    background: rgba(0,123,255,0.05) !important;
+}
+
+/* Help Text Styling */
+.j-inline-help {
+    font-size: 11px !important;
+    color: #6c757d !important;
+    font-style: italic !important;
+    margin-top: 4px !important;
+    line-height: 1.3 !important;
+}
+
+.j-validation-help {
+    font-size: 11px !important;
+    color: #fd7e14 !important;
+    font-weight: 500 !important;
+    margin-top: 4px !important;
+}
+
+/* Required Field Indicator */
+.j-required-star {
+    color: #dc3545 !important;
+    font-weight: bold !important;
+    margin-right: 3px !important;
+}
+
+/* Array Container Styling */
+.j-array-container {
+    border: none !important;
+}
+
+/* Subtle Hierarchical Indentation System */
+
+/* Level 1 nested containers */
+.j-container .j-container {
+    margin-right: 12px !important;
+    border-right: 2px solid #f1f5f9 !important;
+    padding-right: 8px !important;
+}
+
+/* Level 2 nested containers */
+.j-container .j-container .j-container {
+    margin-right: 24px !important;
+    border-right: 2px solid #e2e8f0 !important;
+}
+
+/* Level 3+ nested containers */
+.j-container .j-container .j-container .j-container {
+    margin-right: 36px !important;
+    border-right: 1px solid #cbd5e1 !important;
+}
+
+/* Nested headers - progressively smaller */
+.j-container .j-container .j-oject-title-row td,
+.j-container .j-container .j-array-title-row td {
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    color: #5f6368 !important;
+    padding: 4px 0 2px 0 !important;
+}
+
+.j-container .j-container .j-container .j-oject-title-row td,
+.j-container .j-container .j-container .j-array-title-row td {
+    font-size: 10px !important;
+    color: #80868b !important;
+}
+
+/* Array items - clean styling */
+.j-array-item {
+    background: rgba(248,249,250,0.5) !important;
+    margin-bottom: 3px !important;
+    padding: 6px !important;
+    border-radius: 3px !important;
+    border: 1px solid #f1f3f4 !important;
+}
